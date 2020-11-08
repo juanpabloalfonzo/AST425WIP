@@ -14,11 +14,11 @@ haflux.plot()
 
 cube = Cube(plateifu='8714-12703')
 # get a spaxel by slicing cube[i,j]
-spaxel=cube[16, 16]
+spaxel = cube[16, 16]
 flux = spaxel.flux
 wave = flux.wavelength
 ivar = flux.ivar
 mask = flux.mask
 flux.plot()
 
-#plt.show()
+# plt.show()
