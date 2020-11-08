@@ -1,0 +1,2 @@
+1. Merge managaid and logSFR/mass into one array to keep track of which galaxies are getting classfied into SFG, QG, GVG
+-Problem to fix atm is merging 2 1D arrays to make 1 2D array, ie append one as a column to the other one 
