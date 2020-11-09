@@ -1,2 +1,4 @@
-1. Merge managaid and logSFR/mass into one array to keep track of which galaxies are getting classfied into SFG, QG, GVG
--Problem to fix atm is merging 2 1D arrays to make 1 2D array, ie append one as a column to the other one 
+-Need to find a way to seperate the data set using the line, for some reason the < or > condition arent working properly with logSFR_ID list 
+    -Errors in y1 list? Error in condition? Who knows
+    -When this completed will have a very rudmentary galaxy classification, can move on to scikit learning cluseting methods after 
+    
