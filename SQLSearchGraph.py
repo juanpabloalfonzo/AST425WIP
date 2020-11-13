@@ -17,6 +17,8 @@ data1= np.genfromtxt('ha_flux.csv', delimiter=',')
 mangaid=data[:,0]
 mangaid=np.delete(mangaid,0) #Deletes title of column in spreadsheet to avoid Nan value
 
+np.savetxt('mangaid', mangaid)
+
 mass=data[:,2]
 mass=np.delete(mass,0)
 logmass=np.log10(mass)
@@ -46,18 +48,15 @@ plt.ylabel('Log of SFR')
 
 #Putting Manga ID and logSFR/logmass in one array so galaxies can be tracked
 logSFR_ID=np.column_stack((np.transpose(mangaid),np.transpose(logSFR),np.transpose(logmass)))
-#logmass_ID=np.column_stack((np.transpose(mangaid),np.transpose(logmass)))
 
 # Removing all rows with a NaN and infinity elments in logSFR and logmass to avoid problems with np.where
 
 logSFR_ID=logSFR_ID[~np.isnan(logSFR_ID).any(axis=1)]
 logSFR_ID=logSFR_ID[~np.isinf(logSFR_ID).any(axis=1)]
 
-# logmass_ID=logmass_ID[~np.isnan(logmass_ID).any(axis=1)]
-# logmass_ID=logmass_ID[~np.isinf(logmass_ID).any(axis=1)]
+np.savetxt('Quiescent Galaxies From Distinction Line',logSFR_ID)
 
 # Using np.where to find galaxy information around the distinction line
-#QG = logSFR_ID[np.logical_not(np.logical_and(logSFR_ID[:,1] < y1[0], logSFR_ID[:,1] < y1[0]))]
 QG=logSFR_ID[~((logSFR_ID[:,1]>y1))]
 
 SFG=logSFR_ID[~((logSFR_ID[:,1]<y1))]
