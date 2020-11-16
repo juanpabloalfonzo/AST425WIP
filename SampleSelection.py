@@ -18,6 +18,9 @@ data=pd.read_csv('CompleteTable.csv')
 x1=np.linspace(7,13,len(data))
 y1=seperationline(x1)
 
+print(seperationline(7.96199))
+
+
 #Plotting Data
 # plt.title('Mass Vs SFR of Galaxies in MaNGA')
 # plt.xlabel('Log of Mass')
@@ -28,10 +31,10 @@ y1=seperationline(x1)
 # plt.show()
 
 #Using np.where to classify galaxies as QG, SFG or GVG
-QG=np.where(np.log10(data.loc[:,'sfr_tot'])<y1) #Creates an array of the indicies where this condition is true
+QG=np.where(np.log10(data.loc[:,'sfr_tot'])<seperationline(np.log10(data.loc[:,'nsa_sersic_mass']))) #Creates an array of the indicies where this condition is true
 QG=data.loc[QG] #Taking the rows of data that correspond to QGs
 
-SFG=np.where(np.log10(data.loc[:,'sfr_tot'])>y1)
+SFG=np.where(np.log10(data.loc[:,'sfr_tot'])>seperationline(np.log10(data.loc[:,'nsa_sersic_mass'])))
 SFG=data.loc[SFG]
 
 GVG=np.where(np.log10(data.loc[:,'sfr_tot'])==y1)
@@ -43,7 +46,9 @@ plt.xlabel('Log of Mass')
 plt.ylabel('Log of SFR')
 plt.scatter(np.log10(QG.loc[:,'nsa_sersic_mass']),np.log10(QG.loc[:,'sfr_tot']),c='red')
 plt.scatter(np.log10(SFG.loc[:,'nsa_sersic_mass']),np.log10(SFG.loc[:,'sfr_tot']), c='blue')
+plt.scatter(np.log10(GVG.loc[:,'nsa_sersic_mass']),np.log10(GVG.loc[:,'sfr_tot']), c='green')
 plt.plot(x1,y1)
 plt.show()
+
 
 

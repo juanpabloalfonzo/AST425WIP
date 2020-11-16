@@ -1,4 +1,1 @@
--Need to find a way to seperate the data set using the line, for some reason the < or > condition arent working properly with logSFR_ID list 
-    -Errors in y1 list? Error in condition? Who knows
-    -When this completed will have a very rudmentary galaxy classification, can move on to scikit learning cluseting methods after 
-    
+Get familar with scikit-learn clustering and apply it to classify the galaxies 
