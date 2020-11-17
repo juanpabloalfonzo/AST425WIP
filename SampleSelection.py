@@ -30,14 +30,17 @@ print(seperationline(7.96199))
 # plt.colorbar()
 # plt.show()
 
+
+a=0.10 #Variable Parameter to find GVG region threshold
+
 #Using np.where to classify galaxies as QG, SFG or GVG
-QG=np.where(np.log10(data.loc[:,'sfr_tot'])<seperationline(np.log10(data.loc[:,'nsa_sersic_mass']))) #Creates an array of the indicies where this condition is true
+QG=np.where(np.log10(data.loc[:,'sfr_tot'])<seperationline(np.log10(data.loc[:,'nsa_sersic_mass']-a))) #Creates an array of the indicies where this condition is true
 QG=data.loc[QG] #Taking the rows of data that correspond to QGs
 
-SFG=np.where(np.log10(data.loc[:,'sfr_tot'])>seperationline(np.log10(data.loc[:,'nsa_sersic_mass'])))
+SFG=np.where(np.log10(data.loc[:,'sfr_tot'])>seperationline(np.log10(data.loc[:,'nsa_sersic_mass']+a)))
 SFG=data.loc[SFG]
 
-GVG=np.where(np.log10(data.loc[:,'sfr_tot'])==y1)
+GVG=np.where((np.log10(data.loc[:,'sfr_tot'])<seperationline(np.log10(data.loc[:,'nsa_sersic_mass']))+a) & (np.log10(data.loc[:,'sfr_tot'])>seperationline(np.log10(data.loc[:,'nsa_sersic_mass']))-a))
 GVG=data.loc[GVG]
 
 #Testing if this was successful using a plot 
