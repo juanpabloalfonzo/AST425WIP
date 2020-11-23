@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
 from sklearn import metrics
-from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 
 
 plt.ion()
@@ -23,8 +23,6 @@ data=pd.read_csv('CompleteTable.csv')
 #Generating Distinction Line 
 x1=np.linspace(7,13,len(data))
 y1=seperationline(x1)
-
-print(seperationline(7.96199))
 
 
 #Plotting Data
@@ -77,7 +75,6 @@ plt.figure()
 
 #Using sci kit learn DBSCAN function (min sample is 62, as this gets bigger we get very small and distinct groups, smaller and the two groups merge)
 
-
 clustering= DBSCAN(eps=0.15, min_samples=62).fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']])) #esp is radius epsilion from point and min_samples is min amount of samples in neighbourhood
 cluster= clustering.labels_ 
 plt.scatter(np.log10(data2['nsa_sersic_mass']),np.log10(data2['sfr_tot']),c=cluster,alpha=0.2)
@@ -85,3 +82,14 @@ plt.colorbar()
 plt.show()
 plt.figure()
 
+# Fit K-means with Scikit
+kmeans = KMeans(init='k-means++', n_clusters=3, n_init=10)
+kmeans.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+
+# Predict the cluster for all the samples
+P = kmeans.predict(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+
+colors = list(map(lambda x: '#3b4cc0' if x == 1 else '#b40426', P))
+plt.scatter(np.log10(data2['nsa_sersic_mass']), np.log10(data2['sfr_tot']), c=colors, marker="o", picker=True)
+plt.show()
+plt.figure()
