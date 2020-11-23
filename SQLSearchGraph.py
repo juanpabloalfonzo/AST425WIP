@@ -39,12 +39,12 @@ plt.title('Mass Vs SFR of Galaxies in MaNGA')
 plt.xlabel('Log of Mass')
 plt.ylabel('Log of SFR')
 
-#plt.scatter(logmass,logSFR, c=np.log10(ha_flux), vmin=-2, vmax=-0.8, cmap='viridis', alpha=0.1)
-#plt.hist2d(logmass,logSFR, cmap='viridis', bins=(np.linspace(7,13,51),np.linspace(-5.5,1,51)))
-#plt.plot(x1,y1)
-#plt.colorbar()
-# plt.savefig('Distinction Line.png')
-#plt.show()
+plt.scatter(logmass,logSFR, c=np.log10(ha_flux), vmin=-2, vmax=-0.8, cmap='viridis', alpha=0.1)
+plt.hist2d(logmass,logSFR, cmap='viridis', bins=(np.linspace(7,13,51),np.linspace(-5.5,1,51)))
+plt.plot(x1,y1)
+plt.colorbar().set_label('Ha Flux')
+plt.savefig('Distinction Line.png')
+plt.show()
 
 #Putting Manga ID and logSFR/logmass in one array so galaxies can be tracked
 logSFR_ID=np.column_stack((np.transpose(mangaid),np.transpose(logSFR),np.transpose(logmass)))
