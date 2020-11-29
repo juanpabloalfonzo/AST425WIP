@@ -7,15 +7,27 @@ from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
 from sklearn import metrics
 from sklearn.cluster import KMeans
+float_formatter = lambda x: "%.3f" % x
+np.set_printoptions(formatter={'float_kind':float_formatter})
+from sklearn.cluster import SpectralClustering
+from sklearn.metrics import pairwise_distances
+from matplotlib import pyplot as plt
+import networkx as nx
 
-
-plt.ion()
+plt.ion() #Makes plots interactive in ipython
 
 #Define a function that will create line to distinguish SFGs from QGs
 def seperationline(x):
     m=(-2.6- -0.3)/(9.1-11.7)
     y=m*(x-11.7)-0.3
     return y
+
+#Define a function will help visualize the matricies in the Spectral Clustering
+def draw_graph(G):
+    pos = nx.spring_layout(G)
+    nx.draw_networkx_nodes(G, pos)
+    nx.draw_networkx_labels(G, pos)
+    nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
 
 #Importing All MaNGA Data from DPRall Schema
 data=pd.read_csv('CompleteTable.csv')
@@ -62,6 +74,8 @@ plt.figure()
 
 data2=data[(data.nsa_sersic_mass>0)&(data.sfr_tot>0)] #Define data 2 to get rid of -inf values in the data frame
 
+
+
 #Chosing best Epsilon paramter used in DBScan for the data
 
 neigh = NearestNeighbors(n_neighbors=2)
@@ -70,20 +84,25 @@ distances , indices = nbrs.kneighbors(np.log10(data2[['nsa_sersic_mass', 'sfr_to
 distances = np.sort(distances, axis=0)
 distances = distances[:,1]
 plt.plot(distances) #y value of this figure at max inflection will give us ideal epsilon for DB scan 
+plt.title('Optimal Epsilon for DB Scan')
 plt.show()
 plt.figure()
+
 
 #Using sci kit learn DBSCAN function (min sample is 62, as this gets bigger we get very small and distinct groups, smaller and the two groups merge)
 
 clustering= DBSCAN(eps=0.15, min_samples=62).fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']])) #esp is radius epsilion from point and min_samples is min amount of samples in neighbourhood
 cluster= clustering.labels_ 
 plt.scatter(np.log10(data2['nsa_sersic_mass']),np.log10(data2['sfr_tot']),c=cluster,alpha=0.2)
+plt.title('DB Scan Clustering')
 plt.colorbar()
 plt.show()
 plt.figure()
 
+
+
 # Fit K-means with Scikit
-kmeans = KMeans(init='k-means++', n_clusters=3, n_init=10)
+kmeans = KMeans(init='k-means++', n_clusters=2, n_init=10)
 kmeans.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
 
 # Predict the cluster for all the samples
@@ -91,5 +110,39 @@ P = kmeans.predict(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
 
 colors = list(map(lambda x: '#3b4cc0' if x == 1 else '#b40426', P))
 plt.scatter(np.log10(data2['nsa_sersic_mass']), np.log10(data2['sfr_tot']), c=colors, marker="o", picker=True)
+plt.title('K-Means Clustering')
+plt.show()
+plt.figure()
+
+
+
+#Spectral Cluestering Approach with SciKit 
+W1 = pairwise_distances(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]), metric="euclidean") #Create similarity matrix by finding distances between each pair of points
+# vectorizer = np.vectorize(lambda x: 1 if x < 0.15 else 0) #Adjacency matrix conditon based on distance conditions
+# W = np.vectorize(vectorizer) (W) #Takes similarity matrix and makes it adjacency matrix
+W= (W1<0.15).astype(int) #Takes similarity matrix and makes it adjacency matrix by turning any entry that satifies condition to 1 and any that does not to 0
+print(W)
+
+#Generating Plot to Visualize nodes we created above
+G = nx.random_graphs.erdos_renyi_graph(10, 0.5)
+#draw_graph(G)
+W = nx.adjacency_matrix(G)
+#print(W.todense())
+
+# Constructing the degree matrix by summing all the elements of the corresponding row in the adjacency matrix.
+D = np.diag(np.sum(np.array(W.todense()), axis=1))
+
+
+# Constructing the laplacian matrix by subtracting the adjacency matrix from the degree matrix
+L = D - W
+
+#If the graph (W) has K connected components, then L has K eigenvectors with an eigenvalue of 0.
+e, v = np.linalg.eig(L)
+
+#Actually using spectral clustering with sci-kit learn
+sc = SpectralClustering(n_clusters=2, affinity='nearest_neighbors', random_state=0)
+sc_clustering = sc.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+plt.scatter(np.log10(data2[['nsa_sersic_mass']]), np.log10(data2[['sfr_tot']]), c=sc_clustering.labels_, cmap='rainbow', alpha=0.7, edgecolors='b')
+plt.title('Spectral Clustering')
 plt.show()
 plt.figure()
