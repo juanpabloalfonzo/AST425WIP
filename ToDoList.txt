@@ -1,1 +1,2 @@
-Get familar with scikit-learn clustering and apply it to classify the galaxies 
+Select galaxies considering all methods, finalize sample selection
+Begin applying PCA onto selected galaxies
