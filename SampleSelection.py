@@ -14,7 +14,8 @@ from sklearn.metrics import pairwise_distances
 from matplotlib import pyplot as plt
 import networkx as nx
 
-plt.ion() #Makes plots interactive in ipython
+#plt.ion() #Makes plots interactive in ipython
+plt.ioff() #Runs code without opening figures 
 
 #Define a function that will create line to distinguish SFGs from QGs
 def seperationline(x):
@@ -93,8 +94,22 @@ plt.figure()
 
 clustering= DBSCAN(eps=0.15, min_samples=62).fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']])) #esp is radius epsilion from point and min_samples is min amount of samples in neighbourhood
 cluster= clustering.labels_ 
+
+random= np.random.randint(0,len(data2),len(data2)) #Creating random integer array to use for resampling 
+
+#Define Resampling Technique 
+clustering_random=DBSCAN(eps=0.15, min_samples=62).fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']].iloc[random]))
+cluster_random=clustering_random.labels_
+
 plt.scatter(np.log10(data2['nsa_sersic_mass']),np.log10(data2['sfr_tot']),c=cluster,alpha=0.2)
 plt.title('DB Scan Clustering')
+plt.colorbar()
+plt.show()
+plt.figure()
+
+#Plot the resample 
+plt.scatter(np.log10(data2['nsa_sersic_mass']).iloc[random],np.log10(data2['sfr_tot']).iloc[random],c=cluster_random,alpha=0.2)
+plt.title('DB Scan Clustering Resampling')
 plt.colorbar()
 plt.show()
 plt.figure()
@@ -146,3 +161,30 @@ plt.scatter(np.log10(data2[['nsa_sersic_mass']]), np.log10(data2[['sfr_tot']]), 
 plt.title('Spectral Clustering')
 plt.show()
 plt.figure()
+
+#Creating Bins of data using Initial Sample Selection Graph to create PDF of GVGs
+bin_edges=np.linspace(7,13,num=6)
+
+bin1= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[0])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[1]))
+bin1=data2.loc[bin1]
+ 
+bin2= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[1])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[2]))
+bin2=data2.loc[bin2]
+
+# bin3= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[2])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[3]))
+# bin3=data2.loc[bin3]
+
+# bin4= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[3])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[4]))
+# bin4=data2.loc[bin4]
+
+# bin5= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[4])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[5]))
+# bin5=data2.loc[bin5]
+
+
+
+
+
+
+
+
+
