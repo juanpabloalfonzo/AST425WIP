@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sp
 from scipy.optimize import curve_fit
+from scipy.stats import poisson
+from scipy.stats import norm
 import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
@@ -14,8 +16,8 @@ from sklearn.metrics import pairwise_distances
 from matplotlib import pyplot as plt
 import networkx as nx
 
-#plt.ion() #Makes plots interactive in ipython
-plt.ioff() #Runs code without opening figures 
+plt.ion() #Makes plots interactive in ipython
+#plt.ioff() #Runs code without opening figures 
 
 #Define a function that will create line to distinguish SFGs from QGs
 def seperationline(x):
@@ -166,21 +168,131 @@ plt.figure()
 bin_edges=np.linspace(7,13,num=6)
 
 bin1= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[0])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[1]))
-bin1=data2.loc[bin1]
+bin1=data2.iloc[bin1]
  
 bin2= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[1])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[2]))
-bin2=data2.loc[bin2]
+bin2=data2.iloc[bin2]
 
-# bin3= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[2])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[3]))
-# bin3=data2.loc[bin3]
+bin3= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[2])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[3]))
+bin3=data2.iloc[bin3]
 
-# bin4= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[3])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[4]))
-# bin4=data2.loc[bin4]
+bin4= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[3])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[4]))
+bin4=data2.iloc[bin4]
 
-# bin5= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[4])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[5]))
-# bin5=data2.loc[bin5]
+bin5= np.where((np.log10(data2.loc[:,'nsa_sersic_mass'])>bin_edges[4])& (np.log10(data2.loc[:,'nsa_sersic_mass'])<bin_edges[5]))
+bin5=data2.iloc[bin5]
+
+#Separating Galaxies in each bin into SFG and QG based on the previous definition 
+bin1_SFG=np.where(np.log10(bin1.loc[:,'sfr_tot'])>seperationline(np.log10(bin1.loc[:,'nsa_sersic_mass'])))
+bin1_SFG=bin1.iloc[bin1_SFG]
+
+bin1_QG=np.where(np.log10(bin1.loc[:,'sfr_tot'])<seperationline(np.log10(bin1.loc[:,'nsa_sersic_mass'])))
+bin1_QG=bin1.iloc[bin1_QG]
+
+bin2_SFG=np.where(np.log10(bin2.loc[:,'sfr_tot'])>seperationline(np.log10(bin2.loc[:,'nsa_sersic_mass'])))
+bin2_SFG=bin2.iloc[bin2_SFG]
+
+bin2_QG=np.where(np.log10(bin2.loc[:,'sfr_tot'])<seperationline(np.log10(bin2.loc[:,'nsa_sersic_mass'])))
+bin2_QG=bin2.iloc[bin2_QG]
+
+bin3_SFG=np.where(np.log10(bin3.loc[:,'sfr_tot'])>seperationline(np.log10(bin3.loc[:,'nsa_sersic_mass'])))
+bin3_SFG=bin3.iloc[bin3_SFG]
+
+bin3_QG=np.where(np.log10(bin3.loc[:,'sfr_tot'])<seperationline(np.log10(bin3.loc[:,'nsa_sersic_mass'])))
+bin3_QG=bin3.iloc[bin3_QG]
+
+bin4_SFG=np.where(np.log10(bin4.loc[:,'sfr_tot'])>seperationline(np.log10(bin4.loc[:,'nsa_sersic_mass'])))
+bin4_SFG=bin4.iloc[bin4_SFG]
+
+bin4_QG=np.where(np.log10(bin4.loc[:,'sfr_tot'])<seperationline(np.log10(bin4.loc[:,'nsa_sersic_mass'])))
+bin4_QG=bin4.iloc[bin4_QG]
+
+bin5_SFG=np.where(np.log10(bin5.loc[:,'sfr_tot'])>seperationline(np.log10(bin5.loc[:,'nsa_sersic_mass'])))
+bin5_SFG=bin5.iloc[bin5_SFG]
+
+bin5_QG=np.where(np.log10(bin5.loc[:,'sfr_tot'])<seperationline(np.log10(bin5.loc[:,'nsa_sersic_mass'])))
+bin5_QG=bin5.iloc[bin5_QG]
+
+#Creating Histograms for each bin and fitting a Gaussian to them
+
+x2=np.linspace(0,3) #Useful to define x-axis of Gaussians for each bin 
+
+b=np.where(bin1_SFG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires 
+bin1_SFG=bin1_SFG.iloc[b]
+
+#Bin 1
+plt.title('7 < log M < 8.2 ($M_{\odot}$)')
+plt.hist(bin1_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
+plt.hist(bin1_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.plot(x2,norm.pdf(x2,np.mean(bin1_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin1_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+plt.plot(x2,norm.pdf(x2,np.mean(bin1_QG.loc[:,'specindex_1re_dn4000']),np.std(bin1_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+plt.ylabel('Frequency (Normalized)')
+plt.legend()
+plt.show()
+plt.figure()
+
+b=np.where(bin2_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
+bin2_QG=bin2_QG.iloc[b]
+
+#Bin 2
+plt.title('8.2 < log M < 9.4 ($M_{\odot}$)')
+plt.hist(bin2_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
+plt.hist(bin2_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.plot(x2,norm.pdf(x2,np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin2_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+plt.plot(x2,norm.pdf(x2,np.mean(bin2_QG.loc[:,'specindex_1re_dn4000']),np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+plt.ylabel('Frequency (Normalized)')
+plt.xlim(0.8,2.2)
+plt.legend()
+plt.show()
+plt.figure()
+
+b=np.where(bin3_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
+bin3_QG=bin3_QG.iloc[b]
 
 
+#Bin 3
+plt.title('9.4 < log M < 10.6 ($M_{\odot}$)')
+plt.hist(bin3_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
+plt.hist(bin3_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.plot(x2,norm.pdf(x2,np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin3_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+plt.plot(x2,norm.pdf(x2,np.mean(bin3_QG.loc[:,'specindex_1re_dn4000']),np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+plt.ylabel('Frequency (Normalized)')
+plt.legend()
+plt.show()
+plt.figure()
+
+b=np.where(bin4_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
+bin4_QG=bin4_QG.iloc[b]
+
+#Bin 4
+plt.title('10.6 < log M < 11.8  ($M_{\odot}$)')
+plt.hist(bin4_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
+plt.hist(bin4_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.plot(x2,norm.pdf(x2,np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+plt.plot(x2,norm.pdf(x2,np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+plt.ylabel('Frequency (Normalized)')
+plt.legend()
+plt.show()
+plt.figure()
+
+b=np.where(bin5_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
+bin5_QG=bin5_QG.iloc[b]
+
+#Bin 5
+plt.title('11.8 < log M < 13 ($M_{\odot}$)')
+plt.hist(bin5_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
+plt.hist(bin5_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.plot(x2,norm.pdf(x2,np.mean(bin5_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin5_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+plt.plot(x2,norm.pdf(x2,np.mean(bin5_QG.loc[:,'specindex_1re_dn4000']),np.std(bin5_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+plt.ylabel('Frequency (Normalized)')
+plt.legend
+plt.show()
+plt.figure()
 
 
 
