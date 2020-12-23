@@ -32,6 +32,14 @@ def draw_graph(G):
     nx.draw_networkx_labels(G, pos)
     nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
 
+#Define a function to help us find the intersection(s) of the PDF Gaussians and return an array of the x-coordinate(s)
+def solve(m1,m2,std1,std2):
+  a = 1/(2*std1**2) - 1/(2*std2**2)
+  b = m2/(std2**2) - m1/(std1**2)
+  c = m1**2 /(2*std1**2) - m2**2 / (2*std2**2) - np.log(std2/std1)
+  return np.roots([a,b,c])
+
+
 #Importing All MaNGA Data from DPRall Schema
 data=pd.read_csv('CompleteTable.csv')
 
@@ -133,28 +141,28 @@ plt.figure()
 
 
 
-#Spectral Cluestering Approach with SciKit 
-W1 = pairwise_distances(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]), metric="euclidean") #Create similarity matrix by finding distances between each pair of points
-# vectorizer = np.vectorize(lambda x: 1 if x < 0.15 else 0) #Adjacency matrix conditon based on distance conditions
-# W = np.vectorize(vectorizer) (W) #Takes similarity matrix and makes it adjacency matrix
-W= (W1<0.15).astype(int) #Takes similarity matrix and makes it adjacency matrix by turning any entry that satifies condition to 1 and any that does not to 0
-print(W)
+# #Spectral Cluestering Approach with SciKit 
+# W1 = pairwise_distances(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]), metric="euclidean") #Create similarity matrix by finding distances between each pair of points
+# # vectorizer = np.vectorize(lambda x: 1 if x < 0.15 else 0) #Adjacency matrix conditon based on distance conditions
+# # W = np.vectorize(vectorizer) (W) #Takes similarity matrix and makes it adjacency matrix
+# W= (W1<0.15).astype(int) #Takes similarity matrix and makes it adjacency matrix by turning any entry that satifies condition to 1 and any that does not to 0
+# print(W)
 
-#Generating Plot to Visualize nodes we created above
-G = nx.random_graphs.erdos_renyi_graph(10, 0.5)
-#draw_graph(G)
-W = nx.adjacency_matrix(G)
-#print(W.todense())
+# #Generating Plot to Visualize nodes we created above
+# G = nx.random_graphs.erdos_renyi_graph(10, 0.5)
+# #draw_graph(G)
+# W = nx.adjacency_matrix(G)
+# #print(W.todense())
 
-# Constructing the degree matrix by summing all the elements of the corresponding row in the adjacency matrix.
-D = np.diag(np.sum(np.array(W.todense()), axis=1))
+# # Constructing the degree matrix by summing all the elements of the corresponding row in the adjacency matrix.
+# D = np.diag(np.sum(np.array(W.todense()), axis=1))
 
 
-# Constructing the laplacian matrix by subtracting the adjacency matrix from the degree matrix
-L = D - W
+# # Constructing the laplacian matrix by subtracting the adjacency matrix from the degree matrix
+# L = D - W
 
-#If the graph (W) has K connected components, then L has K eigenvectors with an eigenvalue of 0.
-e, v = np.linalg.eig(L)
+# #If the graph (W) has K connected components, then L has K eigenvectors with an eigenvalue of 0.
+# e, v = np.linalg.eig(L)
 
 #Actually using spectral clustering with sci-kit learn
 sc = SpectralClustering(n_clusters=2, affinity='nearest_neighbors', random_state=0)
@@ -220,12 +228,17 @@ x2=np.linspace(0,3) #Useful to define x-axis of Gaussians for each bin
 b=np.where(bin1_SFG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires 
 bin1_SFG=bin1_SFG.iloc[b]
 
+#Defining the mean and std of the GVG Gaussian as the intersection point between SFG and QG Gaussians and 1/2 of the QG std respectively, as in Angthopo et al. (2019)
+# bin1_GVG_mean=solve(np.mean(bin1_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin1_QG.loc[:,'specindex_1re_dn4000']),np.std(bin1_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin1_QG.loc[:,'specindex_1re_dn4000']))
+# bin1_GVG_std=0.5*np.std(bin1_QG.loc[:,'specindex_1re_dn4000'])
+
 #Bin 1
 plt.title('7 < log M < 8.2 ($M_{\odot}$)')
-plt.hist(bin1_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
-plt.hist(bin1_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.hist(bin1_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+plt.hist(bin1_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin1_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin1_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin1_QG.loc[:,'specindex_1re_dn4000']),np.std(bin1_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+# plt.plot(x2,norm.pdf(x2,bin1_GVG_mean,bin1_GVG_std), color= 'green', label='Gaussian Distribution GVG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
 plt.ylabel('Frequency (Normalized)')
 plt.legend()
@@ -236,11 +249,16 @@ b=np.where(bin2_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 
 bin2_QG=bin2_QG.iloc[b]
 
 #Bin 2
+
+bin2_GVG_mean=solve(np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin2_QG.loc[:,'specindex_1re_dn4000']),np.std(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin2_QG.loc[:,'specindex_1re_dn4000']))
+bin2_GVG_std=0.5*np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])
+
 plt.title('8.2 < log M < 9.4 ($M_{\odot}$)')
-plt.hist(bin2_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
-plt.hist(bin2_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.hist(bin2_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+plt.hist(bin2_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin2_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin2_QG.loc[:,'specindex_1re_dn4000']),np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.plot(x2,norm.pdf(x2,bin2_GVG_mean[0],bin2_GVG_std), color= 'green', label='Gaussian Distribution GVG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
 plt.ylabel('Frequency (Normalized)')
 plt.xlim(0.8,2.2)
@@ -253,11 +271,16 @@ bin3_QG=bin3_QG.iloc[b]
 
 
 #Bin 3
+
+bin3_GVG_mean=solve(np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin3_QG.loc[:,'specindex_1re_dn4000']),np.std(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin3_QG.loc[:,'specindex_1re_dn4000']))
+bin3_GVG_std=0.5*np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])
+
 plt.title('9.4 < log M < 10.6 ($M_{\odot}$)')
-plt.hist(bin3_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
-plt.hist(bin3_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.hist(bin3_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+plt.hist(bin3_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin3_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin3_QG.loc[:,'specindex_1re_dn4000']),np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.plot(x2,norm.pdf(x2,bin3_GVG_mean[1],bin3_GVG_std), color= 'green', label='Gaussian Distribution GVG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
 plt.ylabel('Frequency (Normalized)')
 plt.legend()
@@ -268,11 +291,16 @@ b=np.where(bin4_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 
 bin4_QG=bin4_QG.iloc[b]
 
 #Bin 4
+
+bin4_GVG_mean=solve(np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000']))
+bin4_GVG_std=0.5*np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])
+
 plt.title('10.6 < log M < 11.8  ($M_{\odot}$)')
-plt.hist(bin4_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
-plt.hist(bin4_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.hist(bin4_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+plt.hist(bin4_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+plt.plot(x2,norm.pdf(x2,bin4_GVG_mean[1],bin4_GVG_std), color= 'green', label='Gaussian Distribution GVG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
 plt.ylabel('Frequency (Normalized)')
 plt.legend()
@@ -284,8 +312,8 @@ bin5_QG=bin5_QG.iloc[b]
 
 #Bin 5
 plt.title('11.8 < log M < 13 ($M_{\odot}$)')
-plt.hist(bin5_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.6)
-plt.hist(bin5_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.6)
+plt.hist(bin5_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+plt.hist(bin5_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin5_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin5_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin5_QG.loc[:,'specindex_1re_dn4000']),np.std(bin5_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
@@ -293,7 +321,6 @@ plt.ylabel('Frequency (Normalized)')
 plt.legend
 plt.show()
 plt.figure()
-
 
 
 

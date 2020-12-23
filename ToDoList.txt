@@ -1,4 +1,1 @@
-Create PDF plots like in paper, using the SFR vs Mass to create bins (like velocity is used in paper)
-
-Make histograms in bins based on Dn4000 and fit Gaussians to them to derive the GVG pdf 
-
+Find way to define the GVG Gaussians using the SFG and QG Gaussians 
