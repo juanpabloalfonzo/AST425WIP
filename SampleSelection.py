@@ -251,6 +251,7 @@ bin2_QG=bin2_QG.iloc[b]
 #Bin 2
 
 bin2_GVG_mean=solve(np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin2_QG.loc[:,'specindex_1re_dn4000']),np.std(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin2_QG.loc[:,'specindex_1re_dn4000']))
+bin2_GVG_mean=bin2_GVG_mean[0] #Take the intersection point we care about 
 bin2_GVG_std=0.5*np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])
 
 plt.title('8.2 < log M < 9.4 ($M_{\odot}$)')
@@ -258,7 +259,7 @@ plt.hist(bin2_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', de
 plt.hist(bin2_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin2_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin2_QG.loc[:,'specindex_1re_dn4000']),np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-plt.plot(x2,norm.pdf(x2,bin2_GVG_mean[0],bin2_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+plt.plot(x2,norm.pdf(x2,bin2_GVG_mean,bin2_GVG_std), color= 'green', label='Gaussian Distribution GVG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
 plt.ylabel('Frequency (Normalized)')
 plt.xlim(0.8,2.2)
@@ -273,6 +274,7 @@ bin3_QG=bin3_QG.iloc[b]
 #Bin 3
 
 bin3_GVG_mean=solve(np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin3_QG.loc[:,'specindex_1re_dn4000']),np.std(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin3_QG.loc[:,'specindex_1re_dn4000']))
+bin3_GVG_mean=bin3_GVG_mean[1]
 bin3_GVG_std=0.5*np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])
 
 plt.title('9.4 < log M < 10.6 ($M_{\odot}$)')
@@ -280,7 +282,7 @@ plt.hist(bin3_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', de
 plt.hist(bin3_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin3_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin3_QG.loc[:,'specindex_1re_dn4000']),np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-plt.plot(x2,norm.pdf(x2,bin3_GVG_mean[1],bin3_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+plt.plot(x2,norm.pdf(x2,bin3_GVG_mean,bin3_GVG_std), color= 'green', label='Gaussian Distribution GVG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
 plt.ylabel('Frequency (Normalized)')
 plt.legend()
@@ -293,6 +295,7 @@ bin4_QG=bin4_QG.iloc[b]
 #Bin 4
 
 bin4_GVG_mean=solve(np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000']))
+bin4_GVG_mean=bin4_GVG_mean[1]
 bin4_GVG_std=0.5*np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])
 
 plt.title('10.6 < log M < 11.8  ($M_{\odot}$)')
@@ -300,7 +303,7 @@ plt.hist(bin4_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', de
 plt.hist(bin4_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
 plt.plot(x2,norm.pdf(x2,np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
 plt.plot(x2,norm.pdf(x2,np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-plt.plot(x2,norm.pdf(x2,bin4_GVG_mean[1],bin4_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+plt.plot(x2,norm.pdf(x2,bin4_GVG_mean,bin4_GVG_std), color= 'green', label='Gaussian Distribution GVG')
 plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
 plt.ylabel('Frequency (Normalized)')
 plt.legend()
@@ -322,7 +325,25 @@ plt.legend
 plt.show()
 plt.figure()
 
+#Using the GVG Gaussians we can now extract the GVGs from each bin 
+bin2_GVG=np.where((bin2.loc[:,'specindex_1re_dn4000']<bin2_GVG_mean+bin2_GVG_std) & (bin2.loc[:,'specindex_1re_dn4000']>bin2_GVG_mean-bin2_GVG_std))
+bin2_GVG=bin2.iloc[bin2_GVG]
 
+bin3_GVG=np.where((bin3.loc[:,'specindex_1re_dn4000']<bin3_GVG_mean+bin3_GVG_std) & (bin3.loc[:,'specindex_1re_dn4000']>bin3_GVG_mean-bin3_GVG_std))
+bin3_GVG=bin3.iloc[bin3_GVG]
+
+bin4_GVG=np.where((bin4.loc[:,'specindex_1re_dn4000']<bin4_GVG_mean+bin4_GVG_std) & (bin4.loc[:,'specindex_1re_dn4000']>bin4_GVG_mean-bin4_GVG_std))
+bin4_GVG=bin4.iloc[bin4_GVG]
+
+#Removing GVG overlap with SFG and QG data frames 
+bin2_QG=bin2_QG.loc[bin2_QG.index.difference(bin2_GVG.index),] #Takes QG dataframe and removes any indencies (row number) that match those in the GVG dataframe
+bin2_SFG=bin2_SFG.loc[bin2_SFG.index.difference(bin2_GVG.index),]
+
+bin3_QG=bin3_QG.loc[bin3_QG.index.difference(bin3_GVG.index),] 
+bin3_SFG=bin3_SFG.loc[bin3_SFG.index.difference(bin3_GVG.index),]
+
+bin4_QG=bin4_QG.loc[bin4_QG.index.difference(bin4_GVG.index),] 
+bin4_SFG=bin4_SFG.loc[bin4_SFG.index.difference(bin4_GVG.index),]
 
 
 
