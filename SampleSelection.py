@@ -345,6 +345,7 @@ bin3_SFG=bin3_SFG.loc[bin3_SFG.index.difference(bin3_GVG.index),]
 bin4_QG=bin4_QG.loc[bin4_QG.index.difference(bin4_GVG.index),] 
 bin4_SFG=bin4_SFG.loc[bin4_SFG.index.difference(bin4_GVG.index),]
 
+#PCA Analysis 
 
 
 
