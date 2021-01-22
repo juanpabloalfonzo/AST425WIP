@@ -1,1 +1,1 @@
-Which dn(4000) should be used?
+Keep playing with PCA, use scree plot and compare to how the profile plot looks like 
