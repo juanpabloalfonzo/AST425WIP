@@ -1,1 +1,1 @@
-Find way to define the GVG Gaussians using the SFG and QG Gaussians 
+Which dn(4000) should be used?

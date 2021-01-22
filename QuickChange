@@ -1,4 +1,8 @@
-bin4_GVG_mean=solve(np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000']))
-bin4_GVG_std=0.5*np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])
-
-plt.plot(x2,norm.pdf(x2,bin4_GVG_mean[0],bin4_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+maps = Maps(plateifu=bin3_GVG.loc[98,'plateifu'])
+print(maps)
+# get an emission line map
+ha_vel = maps.emline_gvel_ha_6564
+values_vel = ha_vel.value
+ivar_vel = ha_vel.ivar
+mask_vel = ha_vel.mask
+ha_vel.plot()

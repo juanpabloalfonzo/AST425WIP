@@ -35,13 +35,13 @@ x1=np.linspace(7,13,9718)
 y1=seperationline(x1)
 
 
-plt.title('Mass Vs SFR of Galaxies in MaNGA')
-plt.xlabel('Log of Mass')
-plt.ylabel('Log of SFR')
-
+plt.title('SFR vs Mass of Galaxies in MaNGA')
+plt.xlabel(r'$log(M/M_{\odot})$')
+plt.ylabel(r'$log(SFR/M_{\odot})$')
 plt.scatter(logmass,logSFR, c=np.log10(ha_flux), vmin=-2, vmax=-0.8, cmap='viridis', alpha=0.1)
 plt.hist2d(logmass,logSFR, cmap='viridis', bins=(np.linspace(7,13,51),np.linspace(-5.5,1,51)))
-plt.plot(x1,y1)
+plt.plot(x1,y1,label='Separation Line')
+plt.legend(loc='bottom left')
 plt.colorbar().set_label('Ha Flux')
 plt.savefig('Distinction Line.png')
 plt.show()

@@ -15,6 +15,9 @@ from sklearn.cluster import SpectralClustering
 from sklearn.metrics import pairwise_distances
 from matplotlib import pyplot as plt
 import networkx as nx
+from sklearn.preprocessing import StandardScaler
+from marvin.tools.maps import Maps
+from sklearn.decomposition import PCA
 
 plt.ion() #Makes plots interactive in ipython
 #plt.ioff() #Runs code without opening figures 
@@ -71,17 +74,17 @@ GVG=np.where((np.log10(data.loc[:,'sfr_tot'])<seperationline(np.log10(data.loc[:
 GVG=data.loc[GVG]
 
 #Testing if this was successful using a plot 
-plt.title('Mass Vs SFR of Galaxies in MaNGA')
-plt.xlabel('Log of Mass')
-plt.ylabel('Log of SFR')
-plt.scatter(np.log10(QG.loc[:,'nsa_sersic_mass']),np.log10(QG.loc[:,'sfr_tot']),c='red',label='QGs')
-plt.scatter(np.log10(SFG.loc[:,'nsa_sersic_mass']),np.log10(SFG.loc[:,'sfr_tot']), c='blue', label='SFGs')
-plt.scatter(np.log10(GVG.loc[:,'nsa_sersic_mass']),np.log10(GVG.loc[:,'sfr_tot']), c='green', label='GVGs')
-plt.plot(x1,y1)
-plt.legend()
-plt.savefig('Distinction Line Classification.png')
-plt.show()
-plt.figure()
+# plt.title('SFR vs Mass of Galaxies in MaNGA')
+# plt.xlabel(r'$log(M/M_{\odot})$')
+# plt.ylabel(r'$log(SFR/M_{\odot})$')
+# plt.scatter(np.log10(QG.loc[:,'nsa_sersic_mass']),np.log10(QG.loc[:,'sfr_tot']),c='red',label='QGs')
+# plt.scatter(np.log10(SFG.loc[:,'nsa_sersic_mass']),np.log10(SFG.loc[:,'sfr_tot']), c='blue', label='SFGs')
+# plt.scatter(np.log10(GVG.loc[:,'nsa_sersic_mass']),np.log10(GVG.loc[:,'sfr_tot']), c='green', label='GVGs')
+# plt.plot(x1,y1)
+# plt.legend()
+# plt.savefig('Distinction Line Classification.png')
+# plt.show()
+# plt.figure()
 
 data2=data[(data.nsa_sersic_mass>0)&(data.sfr_tot>0)] #Define data 2 to get rid of -inf values in the data frame
 
@@ -89,15 +92,16 @@ data2=data[(data.nsa_sersic_mass>0)&(data.sfr_tot>0)] #Define data 2 to get rid 
 
 #Chosing best Epsilon paramter used in DBScan for the data
 
-neigh = NearestNeighbors(n_neighbors=2)
-nbrs = neigh.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
-distances , indices = nbrs.kneighbors(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
-distances = np.sort(distances, axis=0)
-distances = distances[:,1]
-plt.plot(distances) #y value of this figure at max inflection will give us ideal epsilon for DB scan 
-plt.title('Optimal Epsilon for DB Scan')
-plt.show()
-plt.figure()
+# neigh = NearestNeighbors(n_neighbors=2)
+# nbrs = neigh.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+# distances , indices = nbrs.kneighbors(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+# distances = np.sort(distances, axis=0)
+# distances = distances[:,1]
+# plt.plot(distances) #y value of this figure at max inflection will give us ideal epsilon for DB scan 
+# plt.title('Optimal Epsilon for DB Scan')
+# plt.savefig('EpislionDBscan.png')
+# plt.show()
+# plt.figure()
 
 
 #Using sci kit learn DBSCAN function (min sample is 62, as this gets bigger we get very small and distinct groups, smaller and the two groups merge)
@@ -111,33 +115,35 @@ random= np.random.randint(0,len(data2),len(data2)) #Creating random integer arra
 clustering_random=DBSCAN(eps=0.15, min_samples=62).fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']].iloc[random]))
 cluster_random=clustering_random.labels_
 
-plt.scatter(np.log10(data2['nsa_sersic_mass']),np.log10(data2['sfr_tot']),c=cluster,alpha=0.2)
-plt.title('DB Scan Clustering')
-plt.colorbar()
-plt.show()
-plt.figure()
+# plt.scatter(np.log10(data2['nsa_sersic_mass']),np.log10(data2['sfr_tot']),c=cluster,alpha=0.2)
+# plt.title('DB Scan Clustering')
+# plt.colorbar()
+# plt.savefig('DBscanClustering.png')
+# plt.show()
+# plt.figure()
 
-#Plot the resample 
-plt.scatter(np.log10(data2['nsa_sersic_mass']).iloc[random],np.log10(data2['sfr_tot']).iloc[random],c=cluster_random,alpha=0.2)
-plt.title('DB Scan Clustering Resampling')
-plt.colorbar()
-plt.show()
-plt.figure()
+# #Plot the resample 
+# plt.scatter(np.log10(data2['nsa_sersic_mass']).iloc[random],np.log10(data2['sfr_tot']).iloc[random],c=cluster_random,alpha=0.2)
+# plt.title('DB Scan Clustering Resampling')
+# plt.colorbar()
+# plt.show()
+# plt.figure()
 
 
 
 # Fit K-means with Scikit
-kmeans = KMeans(init='k-means++', n_clusters=2, n_init=10)
-kmeans.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+# kmeans = KMeans(init='k-means++', n_clusters=2, n_init=10)
+# kmeans.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
 
-# Predict the cluster for all the samples
-P = kmeans.predict(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+# # Predict the cluster for all the samples
+# P = kmeans.predict(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
 
-colors = list(map(lambda x: '#3b4cc0' if x == 1 else '#b40426', P))
-plt.scatter(np.log10(data2['nsa_sersic_mass']), np.log10(data2['sfr_tot']), c=colors, marker="o", picker=True)
-plt.title('K-Means Clustering')
-plt.show()
-plt.figure()
+# colors = list(map(lambda x: '#3b4cc0' if x == 1 else '#b40426', P))
+# plt.scatter(np.log10(data2['nsa_sersic_mass']), np.log10(data2['sfr_tot']), c=colors, marker="o", picker=True)
+# plt.title('K-Means Clustering')
+# plt.savefig('K-Means.png')
+# plt.show()
+# plt.figure()
 
 
 
@@ -165,12 +171,13 @@ plt.figure()
 # e, v = np.linalg.eig(L)
 
 #Actually using spectral clustering with sci-kit learn
-sc = SpectralClustering(n_clusters=2, affinity='nearest_neighbors', random_state=0)
-sc_clustering = sc.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
-plt.scatter(np.log10(data2[['nsa_sersic_mass']]), np.log10(data2[['sfr_tot']]), c=sc_clustering.labels_, cmap='rainbow', alpha=0.7, edgecolors='b')
-plt.title('Spectral Clustering')
-plt.show()
-plt.figure()
+# sc = SpectralClustering(n_clusters=2, affinity='nearest_neighbors', random_state=0)
+# sc_clustering = sc.fit(np.log10(data2[['nsa_sersic_mass', 'sfr_tot']]))
+# plt.scatter(np.log10(data2[['nsa_sersic_mass']]), np.log10(data2[['sfr_tot']]), c=sc_clustering.labels_, cmap='rainbow', alpha=0.7, edgecolors='b')
+# plt.title('Spectral Clustering')
+# plt.savefig('SpectralClustering.png')
+# plt.show()
+# plt.figure()
 
 #Creating Bins of data using Initial Sample Selection Graph to create PDF of GVGs
 bin_edges=np.linspace(7,13,num=6)
@@ -233,17 +240,18 @@ bin1_SFG=bin1_SFG.iloc[b]
 # bin1_GVG_std=0.5*np.std(bin1_QG.loc[:,'specindex_1re_dn4000'])
 
 #Bin 1
-plt.title('7 < log M < 8.2 ($M_{\odot}$)')
-plt.hist(bin1_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
-plt.hist(bin1_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
-plt.plot(x2,norm.pdf(x2,np.mean(bin1_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin1_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
-plt.plot(x2,norm.pdf(x2,np.mean(bin1_QG.loc[:,'specindex_1re_dn4000']),np.std(bin1_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-# plt.plot(x2,norm.pdf(x2,bin1_GVG_mean,bin1_GVG_std), color= 'green', label='Gaussian Distribution GVG')
-plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
-plt.ylabel('Frequency (Normalized)')
-plt.legend()
-plt.show()
-plt.figure()
+# plt.title('7 < log M < 8.2 ($M_{\odot}$)')
+# plt.hist(bin1_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+# plt.hist(bin1_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
+# plt.plot(x2,norm.pdf(x2,np.mean(bin1_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin1_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+# plt.plot(x2,norm.pdf(x2,np.mean(bin1_QG.loc[:,'specindex_1re_dn4000']),np.std(bin1_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+# # plt.plot(x2,norm.pdf(x2,bin1_GVG_mean,bin1_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+# plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+# plt.ylabel('Frequency (Normalized)')
+# plt.legend()
+# plt.savefig('Bin1.png')
+# plt.show()
+# plt.figure()
 
 b=np.where(bin2_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
 bin2_QG=bin2_QG.iloc[b]
@@ -254,18 +262,19 @@ bin2_GVG_mean=solve(np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin2
 bin2_GVG_mean=bin2_GVG_mean[0] #Take the intersection point we care about 
 bin2_GVG_std=0.5*np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])
 
-plt.title('8.2 < log M < 9.4 ($M_{\odot}$)')
-plt.hist(bin2_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
-plt.hist(bin2_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
-plt.plot(x2,norm.pdf(x2,np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin2_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
-plt.plot(x2,norm.pdf(x2,np.mean(bin2_QG.loc[:,'specindex_1re_dn4000']),np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-plt.plot(x2,norm.pdf(x2,bin2_GVG_mean,bin2_GVG_std), color= 'green', label='Gaussian Distribution GVG')
-plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
-plt.ylabel('Frequency (Normalized)')
-plt.xlim(0.8,2.2)
-plt.legend()
-plt.show()
-plt.figure()
+# plt.title('8.2 < log M < 9.4 ($M_{\odot}$)')
+# plt.hist(bin2_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+# plt.hist(bin2_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
+# plt.plot(x2,norm.pdf(x2,np.mean(bin2_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin2_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+# plt.plot(x2,norm.pdf(x2,np.mean(bin2_QG.loc[:,'specindex_1re_dn4000']),np.std(bin2_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+# plt.plot(x2,norm.pdf(x2,bin2_GVG_mean,bin2_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+# plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+# plt.ylabel('Frequency (Normalized)')
+# plt.xlim(0.8,2.2)
+# plt.legend()
+# plt.savefig('Bin2.png')
+# plt.show()
+# plt.figure()
 
 b=np.where(bin3_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
 bin3_QG=bin3_QG.iloc[b]
@@ -277,17 +286,18 @@ bin3_GVG_mean=solve(np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin3
 bin3_GVG_mean=bin3_GVG_mean[1]
 bin3_GVG_std=0.5*np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])
 
-plt.title('9.4 < log M < 10.6 ($M_{\odot}$)')
-plt.hist(bin3_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
-plt.hist(bin3_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
-plt.plot(x2,norm.pdf(x2,np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin3_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
-plt.plot(x2,norm.pdf(x2,np.mean(bin3_QG.loc[:,'specindex_1re_dn4000']),np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-plt.plot(x2,norm.pdf(x2,bin3_GVG_mean,bin3_GVG_std), color= 'green', label='Gaussian Distribution GVG')
-plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
-plt.ylabel('Frequency (Normalized)')
-plt.legend()
-plt.show()
-plt.figure()
+# plt.title('9.4 < log M < 10.6 ($M_{\odot}$)')
+# plt.hist(bin3_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+# plt.hist(bin3_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
+# plt.plot(x2,norm.pdf(x2,np.mean(bin3_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin3_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+# plt.plot(x2,norm.pdf(x2,np.mean(bin3_QG.loc[:,'specindex_1re_dn4000']),np.std(bin3_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+# plt.plot(x2,norm.pdf(x2,bin3_GVG_mean,bin3_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+# plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+# plt.ylabel('Frequency (Normalized)')
+# plt.legend()
+# plt.savefig('Bin3.png')
+# plt.show()
+# plt.figure()
 
 b=np.where(bin4_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
 bin4_QG=bin4_QG.iloc[b]
@@ -298,32 +308,34 @@ bin4_GVG_mean=solve(np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.mean(bin4
 bin4_GVG_mean=bin4_GVG_mean[1]
 bin4_GVG_std=0.5*np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])
 
-plt.title('10.6 < log M < 11.8  ($M_{\odot}$)')
-plt.hist(bin4_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
-plt.hist(bin4_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
-plt.plot(x2,norm.pdf(x2,np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
-plt.plot(x2,norm.pdf(x2,np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-plt.plot(x2,norm.pdf(x2,bin4_GVG_mean,bin4_GVG_std), color= 'green', label='Gaussian Distribution GVG')
-plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
-plt.ylabel('Frequency (Normalized)')
-plt.legend()
-plt.show()
-plt.figure()
+# plt.title('10.6 < log M < 11.8  ($M_{\odot}$)')
+# plt.hist(bin4_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+# plt.hist(bin4_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
+# plt.plot(x2,norm.pdf(x2,np.mean(bin4_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin4_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+# plt.plot(x2,norm.pdf(x2,np.mean(bin4_QG.loc[:,'specindex_1re_dn4000']),np.std(bin4_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+# plt.plot(x2,norm.pdf(x2,bin4_GVG_mean,bin4_GVG_std), color= 'green', label='Gaussian Distribution GVG')
+# plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+# plt.ylabel('Frequency (Normalized)')
+# plt.legend()
+# plt.savefig('Bin4.png')
+# plt.show()
+# plt.figure()
 
 b=np.where(bin5_QG.loc[:,'specindex_1re_dn4000']>-999) #Getting rid of the -999 entires again 
 bin5_QG=bin5_QG.iloc[b]
 
 #Bin 5
-plt.title('11.8 < log M < 13 ($M_{\odot}$)')
-plt.hist(bin5_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
-plt.hist(bin5_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
-plt.plot(x2,norm.pdf(x2,np.mean(bin5_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin5_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
-plt.plot(x2,norm.pdf(x2,np.mean(bin5_QG.loc[:,'specindex_1re_dn4000']),np.std(bin5_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
-plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
-plt.ylabel('Frequency (Normalized)')
-plt.legend
-plt.show()
-plt.figure()
+# plt.title('11.8 < log M < 13 ($M_{\odot}$)')
+# plt.hist(bin5_SFG.loc[:,'specindex_1re_dn4000'], color= 'blue', label= 'SFG', density='True', alpha=0.4)
+# plt.hist(bin5_QG.loc[:,'specindex_1re_dn4000'], color= 'red', label='QG', density='True', alpha=0.4)
+# plt.plot(x2,norm.pdf(x2,np.mean(bin5_SFG.loc[:,'specindex_1re_dn4000']),np.std(bin5_SFG.loc[:,'specindex_1re_dn4000'])), color= 'blue', label='Gaussian Distribution SFG')
+# plt.plot(x2,norm.pdf(x2,np.mean(bin5_QG.loc[:,'specindex_1re_dn4000']),np.std(bin5_QG.loc[:,'specindex_1re_dn4000'])), color= 'red', label='Gaussian Distribution QG')
+# plt.xlabel('Mean Dn(4000) at 1 Effective Radius')
+# plt.ylabel('Frequency (Normalized)')
+# plt.legend(loc='upper left')
+# plt.savefig('Bin5.png')
+# plt.show()
+# plt.figure()
 
 #Using the GVG Gaussians we can now extract the GVGs from each bin 
 bin2_GVG=np.where((bin2.loc[:,'specindex_1re_dn4000']<bin2_GVG_mean+bin2_GVG_std) & (bin2.loc[:,'specindex_1re_dn4000']>bin2_GVG_mean-bin2_GVG_std))
@@ -345,7 +357,120 @@ bin3_SFG=bin3_SFG.loc[bin3_SFG.index.difference(bin3_GVG.index),]
 bin4_QG=bin4_QG.loc[bin4_QG.index.difference(bin4_GVG.index),] 
 bin4_SFG=bin4_SFG.loc[bin4_SFG.index.difference(bin4_GVG.index),]
 
-#PCA Analysis 
+# plt.title('Stellar Sigma at 1 Re for Galaxies in Bin 2')
+# plt.hist(bin2_GVG.loc[:,'stellar_sigma_1re'], color='green', density='True')
+# plt.hist(bin2_SFG.loc[:,'stellar_sigma_1re'], color='blue', density='True')
+# plt.hist(bin2_QG.loc[:,'stellar_sigma_1re'], color='red', density='True')
+# plt.show()
+# plt.figure()
+
+###############################################################
+###############################################################
+
+                     #START OF PCA ANALYSIS
+
+#################################################################
+#################################################################
 
 
 
+#Import varoius maps from Marvin and use them for PCA
+
+maps = Maps(plateifu=bin3_GVG.loc[98,'plateifu'])
+print(maps)
+# get an emission line map
+haflux = maps.emline_gflux_ha_6564
+values_flux = haflux.value
+ivar_flux = haflux.ivar
+mask_flux = haflux.mask
+#haflux.plot()
+
+maps = Maps(plateifu=bin3_GVG.loc[98,'plateifu'])
+print(maps)
+# get an emission line map
+ha_vel = maps.emline_gvel_ha_6564
+values_vel = ha_vel.value
+ivar_vel = ha_vel.ivar
+mask_vel = ha_vel.mask
+#ha_vel.plot()
+
+maps = Maps(plateifu=bin3_GVG.loc[98,'plateifu'])
+print(maps)
+# get an emission line map
+ha_sigma = maps.emline_sigma_ha_6564
+values_sigma = ha_sigma.value
+ivar_sigma = ha_sigma.ivar
+mask_sigma = ha_sigma.mask
+#ha_sigma.plot()
+
+maps = Maps(plateifu=bin3_GVG.loc[98,'plateifu'])
+print(maps)
+# get an emission line map
+ha_ew = maps.emline_gew_ha_6564
+values_ew = ha_vel.value
+ivar_ew = ha_vel.ivar
+mask_ew = ha_vel.mask
+#ha_ew.plot()
+
+maps = Maps(plateifu=bin3_GVG.loc[98,'plateifu'])
+print(maps)
+# get an emission line map
+stellar_vel = maps.stellar_vel
+values_stellar_vel = stellar_vel.value
+ivar_stellar_vel = stellar_vel.ivar
+mask_stellar_vel = stellar_vel.mask
+#stellar_vel.plot()
+
+maps = Maps(plateifu=bin3_GVG.loc[98,'plateifu'])
+print(maps)
+# get an emission line map
+stellar_sigma = maps.stellar_sigma
+values_stellar_sigma = stellar_sigma.value
+ivar_stellar_sigma = stellar_sigma.ivar
+mask_stellar_sigma = stellar_sigma.mask
+#stellar_vel.plot()
+
+
+
+#PCA Analysis
+
+#First we must standardize the data 
+values=np.column_stack([values_flux.flatten(),values_vel.flatten(),values_ew.flatten(),values_sigma.flatten(),values_stellar_vel.flatten(), values_stellar_sigma.flatten()])
+values = StandardScaler().fit_transform(values) #Scale the data to mean 0 and std of 1
+
+
+pca = PCA(n_components=3)
+principalComponents = pca.fit_transform(values)
+principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2', 'principal component 3'])
+
+#PCA Plot
+# plt.scatter(principalComponents[:,0],principalComponents[:,1],principalComponents[:,2])
+# plt.ylabel('PC 2')
+# plt.xlabel('PC 1')
+# #plt.xlim(-1,1)
+# #plt.ylim(-1,1)
+# plt.show()
+# plt.figure()
+
+#PCA Vector Component Plot
+PC0flux=pca.components_[0,0]
+PC0vel=pca.components_[0,1]
+PC0ew=pca.components_[0,2]
+PC0sigma=pca.components_[0,3]
+PC0stellar_vel=pca.components_[0,4]
+PC0stellar_sigma=pca.components_[0,5]
+PC0_values=np.column_stack([PC0flux,PC0vel,PC0ew,PC0sigma,PC0stellar_vel,PC0stellar_sigma])
+variables={'col1':['Ha Flux'], 'col2':['Ha Velocity'], 'col3':['Ha EW'], 'col4':['Ha Sigma'], 'col5':['Stellar Velocity'], 'col6':['Stellar Sigma']}
+variables=pd.DataFrame(data=variables)
+
+PC1_values=np.column_stack([pca.components_[1,0],pca.components_[1,1],pca.components_[1,2],pca.components_[1,3],pca.components_[1,4], pca.components_[1,5]])
+PC2_values=np.column_stack([pca.components_[2,0],pca.components_[2,1],pca.components_[2,2],pca.components_[2,3],pca.components_[2,4],pca.components_[2,5]])
+
+plt.title('Component Pattern Profiles')
+plt.plot(variables.loc[0,:],PC0_values[0,:],label='PC0')
+plt.plot(variables.loc[0,:],PC1_values[0,:],label='PC1')
+plt.plot(variables.loc[0,:],PC2_values[0,:],label='PC2')
+plt.plot(variables.loc[0,:],np.zeros(len(variables.loc[0,:])),"--")
+plt.legend()
+plt.show()
+plt.figure()
