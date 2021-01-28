@@ -1,3 +1,2 @@
 Keep Improving Function that does PCA and plots
-Merge all GVG, SFG and QG list into one (no more bins)
 Look into more PCA plots
