@@ -1,2 +1,8 @@
-Keep Improving Function that does PCA and plots
-Look into more PCA plots
+Bootstrapping and Jackknife PCA methods to get error bars (done, double check magnitude of errors)
+
+Put more galaxies together and feed it into PCA (Have to find way around since maps all have different dimensions, list maybe? since they can expand to data size)
+
+Mix Marvin Pixel Data with Schema table Data and plug into PCA
+
+Look for PCA vectors in the galaxy picture space by multiplying pixel value by PC vector component along that direction 
+ 
