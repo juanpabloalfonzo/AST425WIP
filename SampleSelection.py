@@ -17,11 +17,17 @@ from matplotlib import pyplot as plt
 import networkx as nx
 from sklearn.preprocessing import StandardScaler
 from marvin.tools.maps import Maps
+from marvin import config
 from sklearn.decomposition import PCA
 from sklearn.utils import resample
 
 plt.ion() #Makes plots interactive in ipython
 #plt.ioff() #Runs code without opening figures 
+
+# set config attributes and turn on global downloads of Marvin data
+config.setRelease('DR15')
+config.mode = 'local'
+config.download = True
 
 #Define a function that will create line to distinguish SFGs from QGs
 def seperationline(x):
@@ -391,9 +397,10 @@ def bootstrap(plateifu, Num_PCA_Vectors, Num_Variables,sample_size,reps):
 
     
     PC_Errors_STD=np.zeros([Num_PCA_Vectors,Num_Variables])
-    for i_variables in range(Num_Variables):
-        for i_pc in range(Num_PCA_Vectors):
-            PC_Errors_STD[i_pc,i_variables]=np.std(PC_Vector_Components[i_pc,i_variables,:,:])
+    for i_galaxy in range(len(plateifu)):
+        for i_variables in range(Num_Variables):
+            for i_pc in range(Num_PCA_Vectors):
+                PC_Errors_STD[i_pc,i_variables]=np.std(PC_Vector_Components[i_pc,i_variables,i_galaxy,:])
 
     return(PC_Errors_STD)
 
@@ -508,7 +515,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
     values_stellar_vel_combined=[]
     values_stellar_sigma_combined=[]
     for i in range(len(plateifu)):
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         haflux = maps.emline_gflux_ha_6564
@@ -517,7 +524,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_flux = haflux.mask
         #haflux.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         ha_vel = maps.emline_gvel_ha_6564
@@ -526,7 +533,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_vel = ha_vel.mask
         #ha_vel.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         ha_sigma = maps.emline_sigma_ha_6564
@@ -535,7 +542,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_sigma = ha_sigma.mask
         #ha_sigma.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         ha_ew = maps.emline_gew_ha_656len4
@@ -544,7 +551,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_ew = ha_vel.mask
         #ha_ew.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         stellar_vel = maps.stellar_vel
@@ -553,7 +560,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_stellar_vel = stellar_vel.mask
         #stellar_vel.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         stellar_sigma = maps.stellar_sigma
@@ -593,7 +600,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
     values_stellar_sigma_combined1=np.zeros(int(sum(stellar_sigma)))
     last_step=0
     for i in range(len(plateifu)):
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         haflux = maps.emline_gflux_ha_6564
@@ -602,7 +609,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_flux = haflux.mask
         #haflux.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         ha_vel = maps.emline_gvel_ha_6564
@@ -611,7 +618,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_vel = ha_vel.mask
         #ha_vel.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         ha_sigma = maps.emline_sigma_ha_6564
@@ -620,7 +627,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_sigma = ha_sigma.mask
         #ha_sigma.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         ha_ew = maps.emline_gew_ha_6564
@@ -629,7 +636,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_ew = ha_vel.mask
         #ha_ew.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         stellar_vel = maps.stellar_vel
@@ -638,7 +645,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
         mask_stellar_vel = stellar_vel.mask
         #stellar_vel.plot()
 
-        maps = Maps(plateifu=plateifu[i])
+        maps = Maps(plateifu=plateifu.iloc[i])
         print(maps)
         # get an emission line map
         stellar_sigma = maps.stellar_sigma
@@ -700,6 +707,7 @@ def galaxy_profile_plot_combined(plateifu,Num_PCA_Vectors,Num_Variables):
     
     return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
    
+
 
 #Importing All MaNGA Data from DPRall Schema
 data=pd.read_csv('CompleteTable.csv')
@@ -1018,8 +1026,12 @@ bin4_SFG=bin4_SFG.loc[bin4_SFG.index.difference(bin4_GVG.index),]
 
 #Putting all bins of galaxies into 3 big data frames
 SFG=pd.concat([bin1_SFG,bin2_SFG,bin3_SFG,bin4_SFG,bin5_SFG])
+
 QG=pd.concat([bin1_QG,bin2_QG,bin3_QG,bin4_QG,bin5_QG])
+
 GVG=pd.concat([bin2_GVG,bin3_GVG,bin4_GVG])
+
+GVG=GVG.drop(GVG.index[383]) #Dropping a galaxy which contains no Marvin maps
 
 
 
@@ -1033,8 +1045,9 @@ GVG=pd.concat([bin2_GVG,bin3_GVG,bin4_GVG])
 
 #Functions for PCA Defined at start of script
 
-#galaxy2=galaxy_profile_plot(bin3_GVG.loc[98,'plateifu'],3,6)
+galaxy=galaxy_profile_plot_combined(bin5_QG.loc[:,'plateifu'],3,6)
 
 
-combind=galaxy_profile_plot_combined(bin5_QG.loc[:,'plateifu'],3,6)
+#combind=galaxy_profile_plot_combined(GVG.loc[:,'plateifu'],3,6)
+
 

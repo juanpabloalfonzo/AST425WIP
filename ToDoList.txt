@@ -1,8 +1,11 @@
-Bootstrapping and Jackknife PCA methods to get error bars (done, double check magnitude of errors)
+To do:
 
-Put more galaxies together and feed it into PCA (Have to find way around since maps all have different dimensions, list maybe? since they can expand to data size)
+Need Feedback:
+Download Marvin Maps (they download but have to manually unzip :\ )
 
+Boostrap across spaxels not galaxies (STD still seem too large, maybe error in actual STD procedure, debugging seems like it checks out, PCA not handeling noise well?)
+
+Need to make:
 Mix Marvin Pixel Data with Schema table Data and plug into PCA
 
 Look for PCA vectors in the galaxy picture space by multiplying pixel value by PC vector component along that direction 
- 
