@@ -13,13 +13,13 @@ float_formatter = lambda x: "%.3f" % x
 np.set_printoptions(formatter={'float_kind':float_formatter})
 from sklearn.cluster import SpectralClustering
 from sklearn.metrics import pairwise_distances
-from matplotlib import pyplot as plt
 import networkx as nx
 from sklearn.preprocessing import StandardScaler
 from marvin.tools.maps import Maps
 from marvin import config
 from sklearn.decomposition import PCA
 from sklearn.utils import resample
+import time
 
 plt.ion() #Makes plots interactive in ipython
 #plt.ioff() #Runs code without opening figures 
@@ -1045,7 +1045,7 @@ GVG=GVG.drop(GVG.index[383]) #Dropping a galaxy which contains no Marvin maps
 
 #Functions for PCA Defined at start of script
 
-galaxy=galaxy_profile_plot_combined(bin5_QG.loc[:,'plateifu'],3,6)
+galaxy=galaxy_profile_plot_combined(bin1_SFG.loc[:,'plateifu'],3,6)
 
 
 #combind=galaxy_profile_plot_combined(GVG.loc[:,'plateifu'],3,6)
