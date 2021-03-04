@@ -2,14 +2,8 @@ To do:
 
 Pending Approval:
 Mix Marvin Pixel Data with Schema table Data and plug into PCA (Generalize existing function to take in multiple galaxies at once and combine maps)
-
-
-Need to Modify:
-Download Marvin Maps (run twice and it magically works(ie its trying to read faster than it can write the file) )
-
-Boostrap across spaxels not galaxies (works, but need to make sure all the eigenvalues are of the same sign, 
-use np.diff to find largest difference make the signs agree) (dot product way seems to work, ensure its correct before working it into bootstrap functions)
-
+-Failing with larger plateifu list, works in function.py but not in sampleselection.py
+-Add boostraping to this family of functions 
 
 Need to make:
 Look for PCA vectors in the galaxy picture space by multiplying pixel value by PC vector component along that direction 

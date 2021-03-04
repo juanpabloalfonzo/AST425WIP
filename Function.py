@@ -4,6 +4,7 @@ import scipy as sp
 from scipy.optimize import curve_fit
 from scipy.stats import poisson
 from scipy.stats import norm
+from scipy.stats import pearsonr
 import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
@@ -974,10 +975,9 @@ def galaxy_profile_plot_global_combined(plateifu,Num_PCA_Vectors,Num_Variables):
     
     return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
 
-###################################IN TESTING PHASE######################################################
-
+#Only works with multiple galaxies at once
 def bootstrap_galaxy(plateifu, Num_PCA_Vectors, Num_Variables,reps):
-    PC_Vector_Components=np.zeros([Num_PCA_Vectors,Num_Variables,len(plateifu),reps])
+    PC_Vector_Components=np.zeros([Num_PCA_Vectors,Num_Variables,np.size(plateifu),reps])
     for i_reps in range(reps): #Randomly samples the inputed data frame of galaxies and does PCA Analysis "reps" number of times
         a=resample(plateifu)
         b=galaxy_PCA(a,Num_PCA_Vectors,Num_Variables)
@@ -994,7 +994,6 @@ def bootstrap_galaxy(plateifu, Num_PCA_Vectors, Num_Variables,reps):
 def bootstrap_maps_single(plateifu, Num_PCA_Vectors, Num_Variables, reps):
     PC_Vector_Components=np.zeros([Num_PCA_Vectors,Num_Variables,reps])
     for i_reps in range(reps): #Randomly samples the inputed data frame of galaxies and does PCA Analysis "reps" number of times
-        
         maps = Maps(plateifu=plateifu)
         print(maps)
         # get an emission line map
@@ -1065,25 +1064,28 @@ def bootstrap_maps_single(plateifu, Num_PCA_Vectors, Num_Variables, reps):
         
         PC_Vector_Components[:,:,i_reps]=pca.components_  
 
-    for i in range(reps):
-        vect1=PC_Vector_Components[0,:,i]
-        if np.diff>0:
-            vect1=-1*vect1
-        plt.plot(vect1)
+    for i_pc in range(Num_PCA_Vectors):
+        for i_reps in range(reps):
+            reference_vector=PC_Vector_Components[i_pc,:,0] #Decides what is parallel and anti parallel (choice is arbritary)
+            vect1=PC_Vector_Components[i_pc,:,i_reps]
+            if pearsonr(reference_vector,vect1)[0]<0: #Not testing for perfectly anti parallel vectors but "close enough"
+                vect1=-1*vect1
+            PC_Vector_Components[i_pc,:,i_reps]=vect1
 
-    
+
     PC_Errors_STD=np.zeros([Num_PCA_Vectors,Num_Variables])
     for i_variables in range(Num_Variables):
         for i_pc in range(Num_PCA_Vectors):
             PC_Errors_STD[i_pc,i_variables]=np.std(PC_Vector_Components[i_pc,i_variables,:])
+
 
     return(PC_Errors_STD)
 
 def bootstrap_maps_multi(plateifu, Num_PCA_Vectors, Num_Variables, reps):
     PC_Vector_Components=np.zeros([Num_PCA_Vectors,Num_Variables,reps])
     for i_reps in range(reps): #Randomly samples the inputed data frame of galaxies and does PCA Analysis "reps" number of times
-        plateifu=np.random.choice(plateifu,1)
-        maps = Maps(plateifu=plateifu[0])
+        plateifu_random=np.random.choice(plateifu)
+        maps = Maps(plateifu=plateifu_random)
         print(maps)
         # get an emission line map
         haflux = maps.emline_gflux_ha_6564
@@ -1092,7 +1094,7 @@ def bootstrap_maps_multi(plateifu, Num_PCA_Vectors, Num_Variables, reps):
         mask_flux = haflux.mask
         #haflux.plot()
 
-        maps = Maps(plateifu=plateifu[0])
+        maps = Maps(plateifu=plateifu_random)
         print(maps)
         # get an emission line map
         ha_vel = maps.emline_gvel_ha_6564
@@ -1101,7 +1103,7 @@ def bootstrap_maps_multi(plateifu, Num_PCA_Vectors, Num_Variables, reps):
         mask_vel = ha_vel.mask
         #ha_vel.plot()
 
-        maps = Maps(plateifu=plateifu[0])
+        maps = Maps(plateifu=plateifu_random)
         print(maps)
         # get an emission line map
         ha_sigma = maps.emline_sigma_ha_6564
@@ -1110,7 +1112,7 @@ def bootstrap_maps_multi(plateifu, Num_PCA_Vectors, Num_Variables, reps):
         mask_sigma = ha_sigma.mask
         #ha_sigma.plot()
 
-        maps = Maps(plateifu=plateifu[0])
+        maps = Maps(plateifu=plateifu_random)
         print(maps)
         # get an emission line map
         ha_ew = maps.emline_gew_ha_6564
@@ -1119,7 +1121,7 @@ def bootstrap_maps_multi(plateifu, Num_PCA_Vectors, Num_Variables, reps):
         mask_ew = ha_vel.mask
         #ha_ew.plot()
 
-        maps = Maps(plateifu=plateifu[0])
+        maps = Maps(plateifu=plateifu_random)
         print(maps)
         # get an emission line map
         stellar_vel = maps.stellar_vel
@@ -1128,7 +1130,7 @@ def bootstrap_maps_multi(plateifu, Num_PCA_Vectors, Num_Variables, reps):
         mask_stellar_vel = stellar_vel.mask
         #stellar_vel.plot()
 
-        maps = Maps(plateifu=plateifu[0])
+        maps = Maps(plateifu=plateifu_random)
         print(maps)
         # get an emission line map
         stellar_sigma = maps.stellar_sigma
@@ -1144,16 +1146,23 @@ def bootstrap_maps_multi(plateifu, Num_PCA_Vectors, Num_Variables, reps):
         values_stellar_vel=resample(values_stellar_vel)
         values_stellar_sigma=resample(values_stellar_sigma)
 
-    
+
         values=np.column_stack([values_flux.flatten(),values_vel.flatten(),values_ew.flatten(),values_sigma.flatten(),values_stellar_vel.flatten(), values_stellar_sigma.flatten()])
         values = StandardScaler().fit_transform(values) #Scale the data to mean 0 and std of 1
         pca = PCA(n_components=Num_PCA_Vectors)
         principalComponents = pca.fit_transform(values)
         
-        
         PC_Vector_Components[:,:,i_reps]=pca.components_  
 
-    
+
+    for i_pc in range(Num_PCA_Vectors):
+        for i_reps in range(reps):
+            reference_vector=PC_Vector_Components[i_pc,:,0] #Decides what is parallel and anti parallel (choice is arbritary)
+            vect1=PC_Vector_Components[i_pc,:,i_reps]
+            if pearsonr(reference_vector,vect1)[0]<0: #Not testing for perfectly anti parallel vectors but "close enough"
+                vect1=-1*vect1
+            PC_Vector_Components[i_pc,:,i_reps]=vect1
+
     PC_Errors_STD=np.zeros([Num_PCA_Vectors,Num_Variables])
     for i_variables in range(Num_Variables):
         for i_pc in range(Num_PCA_Vectors):
@@ -1167,6 +1176,7 @@ def bootstrap_maps(plateifu, Num_PCA_Vectors, Num_Variables, reps):
     else:
         return(bootstrap_maps_multi(plateifu,Num_PCA_Vectors,Num_Variables,reps))
 
+#Only works with multiple galaxies at once
 def galaxy_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
 
     g=bootstrap_galaxy(plateifu,Num_PCA_Vectors,Num_Variables,reps)
@@ -1271,10 +1281,10 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
 
     g=bootstrap_maps(plateifu,Num_PCA_Vectors,Num_Variables,reps)
 
-    pca_components=np.zeros([Num_PCA_Vectors,Num_Variables,len(plateifu)])
-    pca_explained_variance_ratio_=np.zeros([len(plateifu),Num_PCA_Vectors])
-    for i in range(len(plateifu)):
-        maps = Maps(plateifu=plateifu.iloc[i])
+    if np.size(plateifu)<2:
+        pca_components=np.zeros([Num_PCA_Vectors,Num_Variables])
+        pca_explained_variance_ratio_=np.zeros([Num_PCA_Vectors])
+        maps = Maps(plateifu=plateifu)
         print(maps)
         # get an emission line map
         haflux = maps.emline_gflux_ha_6564
@@ -1283,7 +1293,7 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
         mask_flux = haflux.mask
         #haflux.plot()
 
-        maps = Maps(plateifu=plateifu.iloc[i])
+        maps = Maps(plateifu=plateifu)
         print(maps)
         # get an emission line map
         ha_vel = maps.emline_gvel_ha_6564
@@ -1292,7 +1302,7 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
         mask_vel = ha_vel.mask
         #ha_vel.plot()
 
-        maps = Maps(plateifu=plateifu.iloc[i])
+        maps = Maps(plateifu=plateifu)
         print(maps)
         # get an emission line map
         ha_sigma = maps.emline_sigma_ha_6564
@@ -1301,7 +1311,7 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
         mask_sigma = ha_sigma.mask
         #ha_sigma.plot()
 
-        maps = Maps(plateifu=plateifu.iloc[i])
+        maps = Maps(plateifu=plateifu)
         print(maps)
         # get an emission line map
         ha_ew = maps.emline_gew_ha_6564
@@ -1310,7 +1320,7 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
         mask_ew = ha_vel.mask
         #ha_ew.plot()
 
-        maps = Maps(plateifu=plateifu.iloc[i])
+        maps = Maps(plateifu=plateifu)
         print(maps)
         # get an emission line map
         stellar_vel = maps.stellar_vel
@@ -1319,7 +1329,7 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
         mask_stellar_vel = stellar_vel.mask
         #stellar_vel.plot()
 
-        maps = Maps(plateifu=plateifu.iloc[i])
+        maps = Maps(plateifu=plateifu)
         print(maps)
         # get an emission line map
         stellar_sigma = maps.stellar_sigma
@@ -1342,7 +1352,7 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
         for a in range(len(pca.explained_variance_ratio_)):
             pc_names.append('PC'+str(a))
         plt.xticks(x,(pc_names))
-        plt.title('Scree Plot '+str(plateifu.iloc[i]))
+        plt.title('Scree Plot '+str(plateifu))
         plt.xlabel('Principal components')
         plt.ylabel('Variance Explained')
         plt.show()
@@ -1355,17 +1365,115 @@ def maps_error_bar(plateifu,Num_PCA_Vectors,Num_Variables,reps):
         
         for b in range(Num_PCA_Vectors):    
             plt.errorbar(variables.loc[0,:],pca.components_[b,:],yerr=g[b,:],label='PC'+str(b))
-        plt.title('Component Pattern Profiles '+ str(plateifu.iloc[i]))
+        plt.title('Component Pattern Profiles '+ str(plateifu))
         plt.ylabel('Correlation')
         plt.xlabel('Variable')
         plt.plot(variables.loc[0,:],np.zeros(len(variables.loc[0,:])),"--")
         plt.legend()
         plt.show()
         plt.figure()
-        pca_components[:,:,i]=pca.components_
-        pca_explained_variance_ratio_[i,:]=pca.explained_variance_ratio_
+        pca_components[:,:]=pca.components_
+        pca_explained_variance_ratio_[:]=pca.explained_variance_ratio_
+    else:
+        pca_components=np.zeros([Num_PCA_Vectors,Num_Variables,np.size(plateifu)])
+        pca_explained_variance_ratio_=np.zeros([np.size(plateifu),Num_PCA_Vectors])
+        for i in range(np.size(plateifu)):
+            maps = Maps(plateifu=plateifu.iloc[i])
+            print(maps)
+            # get an emission line map
+            haflux = maps.emline_gflux_ha_6564
+            values_flux = haflux.value
+            ivar_flux = haflux.ivar
+            mask_flux = haflux.mask
+            #haflux.plot()
+
+            maps = Maps(plateifu=plateifu.iloc[i])
+            print(maps)
+            # get an emission line map
+            ha_vel = maps.emline_gvel_ha_6564
+            values_vel = ha_vel.value
+            ivar_vel = ha_vel.ivar
+            mask_vel = ha_vel.mask
+            #ha_vel.plot()
+
+            maps = Maps(plateifu=plateifu.iloc[i])
+            print(maps)
+            # get an emission line map
+            ha_sigma = maps.emline_sigma_ha_6564
+            values_sigma = ha_sigma.value
+            ivar_sigma = ha_sigma.ivar
+            mask_sigma = ha_sigma.mask
+            #ha_sigma.plot()
+
+            maps = Maps(plateifu=plateifu.iloc[i])
+            print(maps)
+            # get an emission line map
+            ha_ew = maps.emline_gew_ha_6564
+            values_ew = ha_vel.value
+            ivar_ew = ha_vel.ivar
+            mask_ew = ha_vel.mask
+            #ha_ew.plot()
+
+            maps = Maps(plateifu=plateifu.iloc[i])
+            print(maps)
+            # get an emission line map
+            stellar_vel = maps.stellar_vel
+            values_stellar_vel = stellar_vel.value
+            ivar_stellar_vel = stellar_vel.ivar
+            mask_stellar_vel = stellar_vel.mask
+            #stellar_vel.plot()
+
+            maps = Maps(plateifu=plateifu.iloc[i])
+            print(maps)
+            # get an emission line map
+            stellar_sigma = maps.stellar_sigma
+            values_stellar_sigma = stellar_sigma.value
+            ivar_stellar_sigma = stellar_sigma.ivar
+            mask_stellar_sigma = stellar_sigma.mask
+            #stellar_vel.plot()
+        
+            values=np.column_stack([values_flux.flatten(),values_vel.flatten(),values_ew.flatten(),values_sigma.flatten(),values_stellar_vel.flatten(), values_stellar_sigma.flatten()])
+            values = StandardScaler().fit_transform(values) #Scale the data to mean 0 and std of 1
+            pca = PCA(n_components=Num_PCA_Vectors)
+            principalComponents = pca.fit_transform(values)
+            
+
+            x = np.arange(len(pca.explained_variance_ratio_))
+
+            #PCA Screeplot
+            plt.bar(x,pca.explained_variance_ratio_)
+            pc_names=[]
+            for a in range(len(pca.explained_variance_ratio_)):
+                pc_names.append('PC'+str(a))
+            plt.xticks(x,(pc_names))
+            plt.title('Scree Plot '+str(plateifu.iloc[i]))
+            plt.xlabel('Principal components')
+            plt.ylabel('Variance Explained')
+            plt.show()
+            plt.figure()
+
+            #PCA Profile Plot
+            
+            variables={'col1':['Ha Flux'], 'col2':['Ha Velocity'], 'col3':['Ha EW'], 'col4':['Ha Sigma'], 'col5':['Stellar Velocity'], 'col6':['Stellar Sigma']}
+            variables=pd.DataFrame(data=variables)
+            
+            for b in range(Num_PCA_Vectors):    
+                plt.errorbar(variables.loc[0,:],pca.components_[b,:],yerr=g[b,:],label='PC'+str(b))
+            plt.title('Component Pattern Profiles '+ str(plateifu.iloc[i]))
+            plt.ylabel('Correlation')
+            plt.xlabel('Variable')
+            plt.plot(variables.loc[0,:],np.zeros(len(variables.loc[0,:])),"--")
+            plt.legend()
+            plt.show()
+            plt.figure()
+            pca_components[:,:,i]=pca.components_
+            pca_explained_variance_ratio_[i,:]=pca.explained_variance_ratio_
         
     return(pca_components,pca_explained_variance_ratio_,g) #Returns PCA vector components, Variance ratios as an array
+
+
+###################################IN TESTING PHASE######################################################
+
 
 
 
@@ -1376,18 +1484,11 @@ data=pd.read_csv('CompleteTable.csv')
    
 e=pd.DataFrame(['7977-3704','8139-12701','8258-9102','8317-1901'])
 
-b=galaxy_profile_plot_global_combined(e.loc[:,0],3,8)
+# b=galaxy_profile_plot_global_combined(e.loc[:,0],3,8)
 
-#a=bootstrap_maps(e.loc[:,0],3,6,10)
+# c=galaxy_profile_plot_global_combined(data.loc[:,'plateifu'],3,8)
 
-
-
-
-
-
-
-
-
+a=galaxy_error_bar(e.loc[:,0],3,6,10)
 
 
 
@@ -1470,21 +1571,13 @@ b=galaxy_profile_plot_global_combined(e.loc[:,0],3,8)
 #     PC_Vector_Components[:,:,i_20]=pca.components_  
 
 
-
-# for i in range(20):
-#     plt.plot(PC_Vector_Components[0,:,i])
-# plt.figure()
-
-
-# vector_holder1=np.zeros([3,6,20])
-
 # for i_pc in range(3):
 #     for i_reps in range(20):
 #         reference_vector=PC_Vector_Components[i_pc,:,0] #Decides what is parallel and anti parallel (choice is arbritary)
 #         vect1=PC_Vector_Components[i_pc,:,i_reps]
-#         if np.dot(reference_vector,vect1)<0: #Not testing for perfectly anti parallel vectors but "close enough"
+#         if pearsonr(reference_vector,vect1)[0]<0: #Not testing for perfectly anti parallel vectors but "close enough"
 #             vect1=-1*vect1
-#         vector_holder1[i_pc,:,i_reps]=vect1
+#         PC_Vector_Components[i_pc,:,i_reps]=vect1
 #         plt.plot(vect1)
 #     plt.figure()
 
@@ -1494,19 +1587,11 @@ b=galaxy_profile_plot_global_combined(e.loc[:,0],3,8)
 #     for i_pc in range(3):
 #         PC_Errors_STD[i_pc,i_variables]=np.std(PC_Vector_Components[i_pc,i_variables,:])
 
-# PC_Errors_STD2=np.zeros([3,6])
-# for i_variables in range(6):
-#     for i_pc in range(3):
-#         PC_Errors_STD2[i_pc,i_variables]=np.std(vector_holder1[i_pc,i_variables,:])
 
 
 
-# for i in range(20):
-#     vect1=PC_Vector_Components[0,:,i]
-#     if (vect1[3]-vect1[4])>0:
-#             vect1=-1*vect1
-#     plt.plot(vect1)
-# plt.figure()
+
+
 
 
 
