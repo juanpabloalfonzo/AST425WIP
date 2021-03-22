@@ -1,89 +1,20 @@
-PC_Vector_Components=np.zeros([Num_PCA_Vectors,Num_Variables,reps])
-for i in range(reps): #Randomly samples the inputed data frame of galaxies and does PCA Analysis "reps" number of times
-    
-    maps = Maps(plateifu=plateifu.iloc[i])
-    print(maps)
-    # get an emission line map
-    haflux = maps.emline_gflux_ha_Num_Variables5Num_Variables4
-    values_flux = haflux.value
-    ivar_flux = haflux.ivar
-    mask_flux = haflux.mask
-    #haflux.plot()
-
-    maps = Maps(plateifu=plateifu.iloc[i])
-    print(maps)
-    # get an emission line map
-    ha_vel = maps.emline_gvel_ha_Num_Variables5Num_Variables4
-    values_vel = ha_vel.value
-    ivar_vel = ha_vel.ivar
-    mask_vel = ha_vel.mask
-    #ha_vel.plot()
-
-    maps = Maps(plateifu=plateifu.iloc[i])
-    print(maps)
-    # get an emission line map
-    ha_sigma = maps.emline_sigma_ha_Num_Variables5Num_Variables4
-    values_sigma = ha_sigma.value
-    ivar_sigma = ha_sigma.ivar
-    mask_sigma = ha_sigma.mask
-    #ha_sigma.plot()
-
-    maps = Maps(plateifu=plateifu.iloc[i])
-    print(maps)
-    # get an emission line map
-    ha_ew = maps.emline_gew_ha_Num_Variables5Num_Variables4
-    values_ew = ha_vel.value
-    ivar_ew = ha_vel.ivar
-    mask_ew = ha_vel.mask
-    #ha_ew.plot()
-
-    maps = Maps(plateifu=plateifu.iloc[i])
-    print(maps)
-    # get an emission line map
-    stellar_vel = maps.stellar_vel
-    values_stellar_vel = stellar_vel.value
-    ivar_stellar_vel = stellar_vel.ivar
-    mask_stellar_vel = stellar_vel.mask
-    #stellar_vel.plot()
-
-    maps = Maps(plateifu=plateifu.iloc[i])
-    print(maps)
-    # get an emission line map
-    stellar_sigma = maps.stellar_sigma
-    values_stellar_sigma = stellar_sigma.value
-    ivar_stellar_sigma = stellar_sigma.ivar
-    mask_stellar_sigma = stellar_sigma.mask
-    #stellar_vel.plot()
-
-    values_flux=resample(values_flux)
-    values_vel=resample(values_vel)
-    values_ew=resample(values_ew)
-    values_sigma=resample(values_sigma)
-    values_stellar_vel=resample(values_stellar_vel)
-    values_stellar_sigma=resample(values_stellar_sigma)
-
-
-    values=np.column_stack([values_flux.flatten(),values_vel.flatten(),values_ew.flatten(),values_sigma.flatten(),values_stellar_vel.flatten(), values_stellar_sigma.flatten()])
-    values = StandardScaler().fit_transform(values) #Scale the data to mean 0 and std of 1
-    pca = PCA(n_components=Num_PCA_Vectors)
-    principalComponents = pca.fit_transform(values)
-    
-    
-    PC_Vector_Components[:,:,i_reps]=pca.components_  
-
-
-for i_pc in range(Num_PCA_Vectors):
-    for i_reps in range(reps):
-        reference_vector=PC_Vector_Components[i_pc,:,0] #Decides what is parallel and anti parallel (choice is arbritary)
-        vect1=PC_Vector_Components[i_pc,:,i_reps]
-        if pearsonr(reference_vector,vect1)[0]<0: #Not testing for perfectly anti parallel vectors but "close enough"
-            vect1=-1*vect1
-        PC_Vector_Components[i_pc,:,i_reps]=vect1
-        plt.plot(vect1)
-    plt.figure()
-
-
-PC_Errors_STD=np.zeros([Num_PCA_Vectors,Num_Variables])
-for i_variables in range(Num_Variables):
-    for i_pc in range(Num_PCA_Vectors):
-        PC_Errors_STD[i_pc,i_variables]=np.std(PC_Vector_Components[i_pc,i_variables,:])
+values_oii2_vel_combined1[d:f]=values_oii2_vel.flatten()
+        values_hthe_vel_combined1[d:f]=values_hthe_vel.flatten()
+        values_heta_vel_combined1[d:f]=values_heta_vel.flatten()
+        values_neiii1_vel_combined1[d:f]=values_neiii1_vel.flatten()
+        values_neiii2_vel_combined1[d:f]=values_neiii2_vel.flatten()
+        values_hzet_vel_combined1[d:f]=values_hzet_vel.flatten()
+        values_eps_vel_combined1[d:f]=values_eps_vel.flatten()
+        values_hdel_vel_combined1[d:f]=values_hdel_vel.flatten()
+        values_hgam_vel_combined1[d:f]=values_hgam_vel.flatten()
+        values_heii_vel_combined1[d:f]=values_heii_vel.flatten()
+        values_hb_vel_combined1[d:f]=values_hb_vel.flatten()
+        values_oiii1_vel_combined1[d:f]=values_oiii1_vel.flatten()
+        values_oiii2_vel_combined1[d:f]=values_oiii2_vel.flatten()
+        values_hei_vel_combined1[d:f]=values_hei_vel.flatten()
+        values_oi1_vel_combined1[d:f]=values_oi1_vel.flatten()
+        values_oi2_vel_combined1[d:f]=values_oi2_vel.flatten()
+        values_nii1_vel_combined1[d:f]=values_nii1_vel.flatten()
+        values_nii2_vel_combined1[d:f]=values_nii2_vel.flatten()
+        values_sii1_vel_combined1[d:f]=values_sii1_vel.flatten()
+        values_sii2_vel_combined1[d:f]=values_sii2_vel.flatten()

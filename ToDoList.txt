@@ -1,9 +1,8 @@
 To do:
 
-Pending Approval:
-Mix Marvin Pixel Data with Schema table Data and plug into PCA (Generalize existing function to take in multiple galaxies at once and combine maps)
--Failing with larger plateifu list, works in function.py but not in sampleselection.py
--Add boostraping to this family of functions 
+Use all kinematic components in a combined maps PCA, do it per galaxy type per mass bin (total of 15 plots)
+-Whats all the greek letters in H spectra? Specific break lines? 
 
 Need to make:
 Look for PCA vectors in the galaxy picture space by multiplying pixel value by PC vector component along that direction 
+-Working on why Image calls from Marvin API are not working 
