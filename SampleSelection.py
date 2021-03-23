@@ -21,7 +21,7 @@ from marvin.tools.image import Image
 from marvin import config
 from sklearn.decomposition import PCA
 from sklearn.utils import resample
-import time
+
 
 plt.ion() #Makes plots interactive in ipython
 #plt.ioff() #Runs code without opening figures 
@@ -2674,6 +2674,543 @@ def galaxy_profile_plot_combined_vel(plateifu,Num_PCA_Vectors):
     
     return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
 
+#Same as above function but does not plot and instead saves the relevant arrays as .txt files 
+def galaxy_combined_vel_PCA(plateifu,Num_PCA_Vectors,Group_Name):
+    
+    values_ha_vel_combined=[]
+    values_oii1_vel_combined=[]
+    values_oii2_vel_combined=[]
+    values_hthe_vel_combined=[]
+    values_heta_vel_combined=[]
+    values_neiii1_vel_combined=[]
+    values_neiii2_vel_combined=[]
+    values_hzet_vel_combined=[]
+    values_heps_vel_combined=[]
+    values_hdel_vel_combined=[]
+    values_hgam_vel_combined=[]
+    values_heii_vel_combined=[]
+    values_hb_vel_combined=[]
+    values_oiii1_vel_combined=[]
+    values_oiii2_vel_combined=[]
+    values_hei_vel_combined=[]
+    values_oi1_vel_combined=[]
+    values_oi2_vel_combined=[]
+    values_nii1_vel_combined=[]
+    values_nii2_vel_combined=[]
+    values_sii1_vel_combined=[]
+    values_sii2_vel_combined=[]
+    values_stellar_vel_combined=[]
+    for i in range(len(plateifu)):
+        #H Alpha
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        ha_vel = maps.emline_gvel_ha_6564
+        values_ha_vel = ha_vel.value
+        ivar_ha_vel = ha_vel.ivar
+        mask_ha_vel = ha_vel.mask
+
+        #OII 3727
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii1_vel = maps.emline_gvel_oii_3727
+        values_oii1_vel = oii1_vel.value
+        ivar_oii1_vel = oii1_vel.ivar
+        mask_oii1_vel = oii1_vel.mask
+
+        #OII 3729
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii2_vel = maps.emline_gvel_oii_3729
+        values_oii2_vel = oii2_vel.value
+        ivar_oii2_vel = oii2_vel.ivar
+        mask_oii2_vel = oii2_vel.mask
+
+        #H Theta 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hthe_vel = maps.emline_gvel_hthe_3798
+        values_hthe_vel = hthe_vel.value
+        ivar_hthe_vel = hthe_vel.ivar
+        mask_hthe_vel = hthe_vel.mask
+
+       #H Eta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heta_vel = maps.emline_gvel_heta_3836
+        values_heta_vel = heta_vel.value
+        ivar_heta_vel = heta_vel.ivar
+        mask_heta_vel = heta_vel.mask
+
+        #Ne III 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii1_vel = maps.emline_gvel_neiii1_3869
+        values_neiii1_vel = neiii1_vel.value
+        ivar_neiii1_vel = neiii1_vel.ivar
+        mask_neiii1_vel = neiii1_vel.mask
+
+        #Ne III 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii2_vel = maps.emline_gvel_neiii2_3968
+        values_neiii2_vel = neiii2_vel.value
+        ivar_neiii2_vel = neiii2_vel.ivar
+        mask_neiii2_vel = neiii2_vel.mask
+
+        #H Zeta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hzet_vel = maps.emline_gvel_hzet_3890
+        values_hzet_vel = hzet_vel.value
+        ivar_hzet_vel = hzet_vel.ivar
+        mask_hzet_vel = hzet_vel.mask
+
+        #H Episilon 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heps_vel = maps.emline_gvel_heps_3971
+        values_heps_vel = heps_vel.value
+        ivar_heps_vel = heps_vel.ivar
+        mask_heps_vel = heps_vel.mask
+
+        #H Delta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hdel_vel = maps.emline_gvel_hdel_4102
+        values_hdel_vel = hdel_vel.value
+        ivar_hdel_vel = hdel_vel.ivar
+        mask_hdel_vel = hdel_vel.mask
+
+        #H Gamma
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hgam_vel = maps.emline_gvel_hgam_4341
+        values_hgam_vel = hgam_vel.value
+        ivar_hgam_vel = hgam_vel.ivar
+        mask_hgam_vel = hgam_vel.mask
+
+        #He II 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heii_vel = maps.emline_gvel_heii_4687
+        values_heii_vel = heii_vel.value
+        ivar_heii_vel = heii_vel.ivar
+        mask_heii_vel = heii_vel.mask
+
+        #H Beta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hb_vel = maps.emline_gvel_hb_4862
+        values_hb_vel = hb_vel.value
+        ivar_hb_vel = hb_vel.ivar
+        mask_hb_vel = hb_vel.mask
+
+        #OIII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii1_vel = maps.emline_gvel_oiii1_4960
+        values_oiii1_vel = oiii1_vel.value
+        ivar_oiii1_vel = oiii1_vel.ivar
+        mask_oiii1_vel = oiii1_vel.mask
+
+        #OIII 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii2_vel = maps.emline_gvel_oiii2_5008
+        values_oiii2_vel = oiii2_vel.value
+        ivar_oiii2_vel = oiii2_vel.ivar
+        mask_oiii2_vel = oiii2_vel.mask
+
+        #He I
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hei_vel = maps.emline_gvel_hei_5877
+        values_hei_vel = hei_vel.value
+        ivar_hei_vel = hei_vel.ivar
+        mask_hei_vel = hei_vel.mask
+
+        #OI 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi1_vel = maps.emline_gvel_oi1_6302
+        values_oi1_vel = oi1_vel.value
+        ivar_oi1_vel = oi1_vel.ivar
+        mask_oi1_vel = oi1_vel.mask
+
+        #OI 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi2_vel = maps.emline_gvel_oi2_6365
+        values_oi2_vel = oi2_vel.value
+        ivar_oi2_vel = oi2_vel.ivar
+        mask_oi2_vel = oi2_vel.mask
+
+        #N II 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii1_vel = maps.emline_gvel_nii1_6549
+        values_nii1_vel = nii1_vel.value
+        ivar_nii1_vel = nii1_vel.ivar
+        mask_nii1_vel = nii1_vel.mask
+
+        #N II 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii2_vel = maps.emline_gvel_nii2_6585
+        values_nii2_vel = nii2_vel.value
+        ivar_nii2_vel = nii2_vel.ivar
+        mask_nii2_vel = nii2_vel.mask
+
+        #SII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii1_vel = maps.emline_gvel_sii1_6718
+        values_sii1_vel = sii1_vel.value
+        ivar_sii1_vel = sii1_vel.ivar
+        mask_sii1_vel = sii1_vel.mask
+
+        #SII 2 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii2_vel = maps.emline_gvel_sii2_6732
+        values_sii2_vel = sii2_vel.value
+        ivar_sii2_vel = sii2_vel.ivar
+        mask_sii2_vel = sii2_vel.mask
+
+        #Stellar Vel 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        stellar_vel = maps.stellar_vel
+        values_stellar_vel = stellar_vel.value
+        ivar_stellar_vel = stellar_vel.ivar
+        mask_stellar_vel = stellar_vel.mask
+
+
+        values_ha_vel_combined.append(values_ha_vel.flatten())
+        values_oii1_vel_combined.append(values_oii1_vel.flatten())
+        values_oii2_vel_combined.append(values_oii2_vel.flatten())
+        values_hthe_vel_combined.append(values_hthe_vel.flatten())
+        values_heta_vel_combined.append(values_heta_vel.flatten())
+        values_neiii1_vel_combined.append(values_neiii1_vel.flatten())
+        values_neiii2_vel_combined.append(values_neiii2_vel.flatten())
+        values_hzet_vel_combined.append(values_hzet_vel.flatten())
+        values_heps_vel_combined.append(values_heps_vel.flatten())
+        values_hdel_vel_combined.append(values_hdel_vel.flatten())
+        values_hgam_vel_combined.append(values_hgam_vel.flatten())
+        values_heii_vel_combined.append(values_heii_vel.flatten())
+        values_hb_vel_combined.append(values_hb_vel.flatten())
+        values_oiii1_vel_combined.append(values_oiii1_vel.flatten())
+        values_oiii2_vel_combined.append(values_oiii2_vel.flatten())
+        values_hei_vel_combined.append(values_hei_vel.flatten())
+        values_oi1_vel_combined.append(values_oi1_vel.flatten())
+        values_oi2_vel_combined.append(values_oi2_vel.flatten())
+        values_nii1_vel_combined.append(values_nii1_vel.flatten())
+        values_nii2_vel_combined.append(values_nii2_vel.flatten())
+        values_sii1_vel_combined.append(values_sii1_vel.flatten())
+        values_sii2_vel_combined.append(values_sii2_vel.flatten())
+        values_stellar_vel_combined.append(values_stellar_vel.flatten())
+
+
+    #Makes arrays to the appropriate size to fit the pixel maps of the different galaxies
+    ha_vel=np.zeros(len(plateifu))
+    oii1_vel=np.zeros(len(plateifu))
+    oii2_vel=np.zeros(len(plateifu))
+    hthe_vel=np.zeros(len(plateifu))
+    heta_vel=np.zeros(len(plateifu))
+    neiii1_vel=np.zeros(len(plateifu))
+    neiii2_vel=np.zeros(len(plateifu))
+    hzet_vel=np.zeros(len(plateifu))
+    heps_vel=np.zeros(len(plateifu))
+    hdel_vel=np.zeros(len(plateifu))
+    hgam_vel=np.zeros(len(plateifu))
+    heii_vel=np.zeros(len(plateifu))
+    hb_vel=np.zeros(len(plateifu))
+    oiii1_vel=np.zeros(len(plateifu))
+    oiii2_vel=np.zeros(len(plateifu))
+    hei_vel=np.zeros(len(plateifu))
+    oi1_vel=np.zeros(len(plateifu))
+    oi2_vel=np.zeros(len(plateifu))
+    nii1_vel=np.zeros(len(plateifu))
+    nii2_vel=np.zeros(len(plateifu))
+    sii1_vel=np.zeros(len(plateifu))
+    sii2_vel=np.zeros(len(plateifu))
+    stellar_vel=np.zeros(len(plateifu))
+    for j_galaxy in range(len(plateifu)):
+        ha_vel[j_galaxy]=len(values_ha_vel_combined[j_galaxy])
+        oii1_vel[j_galaxy]=len(values_oii1_vel_combined[j_galaxy])
+        oii2_vel[j_galaxy]=len(values_oii2_vel_combined[j_galaxy])
+        hthe_vel[j_galaxy]=len(values_hthe_vel_combined[j_galaxy])
+        heta_vel[j_galaxy]=len(values_heta_vel_combined[j_galaxy])
+        neiii1_vel[j_galaxy]=len(values_neiii1_vel_combined[j_galaxy])
+        neiii2_vel[j_galaxy]=len(values_neiii2_vel_combined[j_galaxy])
+        hzet_vel[j_galaxy]=len(values_hzet_vel_combined[j_galaxy])
+        heps_vel[j_galaxy]=len(values_heps_vel_combined[j_galaxy])
+        hdel_vel[j_galaxy]=len(values_hdel_vel_combined[j_galaxy])
+        hgam_vel[j_galaxy]=len(values_hgam_vel_combined[j_galaxy])
+        heii_vel[j_galaxy]=len(values_heii_vel_combined[j_galaxy])
+        hb_vel[j_galaxy]=len(values_hb_vel_combined[j_galaxy])
+        oiii1_vel[j_galaxy]=len(values_oiii1_vel_combined[j_galaxy])
+        oiii2_vel[j_galaxy]=len(values_oiii2_vel_combined[j_galaxy])
+        hei_vel[j_galaxy]=len(values_hei_vel_combined[j_galaxy])
+        oi1_vel[j_galaxy]=len(values_oi1_vel_combined[j_galaxy])
+        oi2_vel[j_galaxy]=len(values_oi2_vel_combined[j_galaxy])
+        nii1_vel[j_galaxy]=len(values_nii1_vel_combined[j_galaxy])
+        nii2_vel[j_galaxy]=len(values_nii2_vel_combined[j_galaxy])
+        sii1_vel[j_galaxy]=len(values_sii1_vel_combined[j_galaxy])
+        sii2_vel[j_galaxy]=len(values_sii2_vel_combined[j_galaxy])
+        stellar_vel[j_galaxy]=len(values_stellar_vel_combined[j_galaxy])
+
+    #Stores the data of each pixel for each galaxy of the same variable in 1D array, this will be fed to PCA
+    values_ha_vel_combined1=np.zeros(int(sum(ha_vel)))
+    values_oii1_vel_combined1=np.zeros(int(sum(oii1_vel)))
+    values_oii2_vel_combined1=np.zeros(int(sum(oii2_vel)))
+    values_hthe_vel_combined1=np.zeros(int(sum(hthe_vel)))
+    values_heta_vel_combined1=np.zeros(int(sum(heta_vel)))
+    values_neiii1_vel_combined1=np.zeros(int(sum(neiii1_vel)))
+    values_neiii2_vel_combined1=np.zeros(int(sum(neiii2_vel)))
+    values_hzet_vel_combined1=np.zeros(int(sum(hzet_vel)))
+    values_heps_vel_combined1=np.zeros(int(sum(heps_vel)))
+    values_hdel_vel_combined1=np.zeros(int(sum(hdel_vel)))
+    values_hgam_vel_combined1=np.zeros(int(sum(hgam_vel)))
+    values_heii_vel_combined1=np.zeros(int(sum(heii_vel)))
+    values_hb_vel_combined1=np.zeros(int(sum(hb_vel)))
+    values_oiii1_vel_combined1=np.zeros(int(sum(oiii1_vel)))
+    values_oiii2_vel_combined1=np.zeros(int(sum(oiii2_vel)))
+    values_hei_vel_combined1=np.zeros(int(sum(hei_vel)))
+    values_oi1_vel_combined1=np.zeros(int(sum(oi1_vel)))
+    values_oi2_vel_combined1=np.zeros(int(sum(oi2_vel)))
+    values_nii1_vel_combined1=np.zeros(int(sum(nii1_vel)))
+    values_nii2_vel_combined1=np.zeros(int(sum(nii2_vel)))
+    values_sii1_vel_combined1=np.zeros(int(sum(sii1_vel)))
+    values_sii2_vel_combined1=np.zeros(int(sum(sii2_vel)))
+    values_stellar_vel_combined1=np.zeros(int(sum(stellar_vel)))
+    last_step=0
+    for i in range(len(plateifu)):
+        #H Alpha
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        ha_vel = maps.emline_gvel_ha_6564
+        values_ha_vel = ha_vel.value
+        ivar_ha_vel = ha_vel.ivar
+        mask_ha_vel = ha_vel.mask
+
+        #OII 3727
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii1_vel = maps.emline_gvel_oii_3727
+        values_oii1_vel = oii1_vel.value
+        ivar_oii1_vel = oii1_vel.ivar
+        mask_oii1_vel = oii1_vel.mask
+
+        #OII 3729
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii2_vel = maps.emline_gvel_oii_3729
+        values_oii2_vel = oii2_vel.value
+        ivar_oii2_vel = oii2_vel.ivar
+        mask_oii2_vel = oii2_vel.mask
+
+        #H Theta 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hthe_vel = maps.emline_gvel_hthe_3798
+        values_hthe_vel = hthe_vel.value
+        ivar_hthe_vel = hthe_vel.ivar
+        mask_hthe_vel = hthe_vel.mask
+
+       #H Eta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heta_vel = maps.emline_gvel_heta_3836
+        values_heta_vel = heta_vel.value
+        ivar_heta_vel = heta_vel.ivar
+        mask_heta_vel = heta_vel.mask
+
+        #Ne III 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii1_vel = maps.emline_gvel_neiii1_3869
+        values_neiii1_vel = neiii1_vel.value
+        ivar_neiii1_vel = neiii1_vel.ivar
+        mask_neiii1_vel = neiii1_vel.mask
+
+        #Ne III 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii2_vel = maps.emline_gvel_neiii2_3968
+        values_neiii2_vel = neiii2_vel.value
+        ivar_neiii2_vel = neiii2_vel.ivar
+        mask_neiii2_vel = neiii2_vel.mask
+
+        #H Zeta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hzet_vel = maps.emline_gvel_hzet_3890
+        values_hzet_vel = hzet_vel.value
+        ivar_hzet_vel = hzet_vel.ivar
+        mask_hzet_vel = hzet_vel.mask
+
+        #H Episilon 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heps_vel = maps.emline_gvel_heps_3971
+        values_heps_vel = heps_vel.value
+        ivar_heps_vel = heps_vel.ivar
+        mask_heps_vel = heps_vel.mask
+
+        #H Delta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hdel_vel = maps.emline_gvel_hdel_4102
+        values_hdel_vel = hdel_vel.value
+        ivar_hdel_vel = hdel_vel.ivar
+        mask_hdel_vel = hdel_vel.mask
+
+        #H Gamma
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hgam_vel = maps.emline_gvel_hgam_4341
+        values_hgam_vel = hgam_vel.value
+        ivar_hgam_vel = hgam_vel.ivar
+        mask_hgam_vel = hgam_vel.mask
+
+        #He II 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heii_vel = maps.emline_gvel_heii_4687
+        values_heii_vel = heii_vel.value
+        ivar_heii_vel = heii_vel.ivar
+        mask_heii_vel = heii_vel.mask
+
+        #H Beta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hb_vel = maps.emline_gvel_hb_4862
+        values_hb_vel = hb_vel.value
+        ivar_hb_vel = hb_vel.ivar
+        mask_hb_vel = hb_vel.mask
+
+        #OIII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii1_vel = maps.emline_gvel_oiii1_4960
+        values_oiii1_vel = oiii1_vel.value
+        ivar_oiii1_vel = oiii1_vel.ivar
+        mask_oiii1_vel = oiii1_vel.mask
+
+        #OIII 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii2_vel = maps.emline_gvel_oiii2_5008
+        values_oiii2_vel = oiii2_vel.value
+        ivar_oiii2_vel = oiii2_vel.ivar
+        mask_oiii2_vel = oiii2_vel.mask
+
+        #He I
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hei_vel = maps.emline_gvel_hei_5877
+        values_hei_vel = hei_vel.value
+        ivar_hei_vel = hei_vel.ivar
+        mask_hei_vel = hei_vel.mask
+
+        #OI 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi1_vel = maps.emline_gvel_oi1_6302
+        values_oi1_vel = oi1_vel.value
+        ivar_oi1_vel = oi1_vel.ivar
+        mask_oi1_vel = oi1_vel.mask
+
+        #OI 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi2_vel = maps.emline_gvel_oi2_6365
+        values_oi2_vel = oi2_vel.value
+        ivar_oi2_vel = oi2_vel.ivar
+        mask_oi2_vel = oi2_vel.mask
+
+        #N II 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii1_vel = maps.emline_gvel_nii1_6549
+        values_nii1_vel = nii1_vel.value
+        ivar_nii1_vel = nii1_vel.ivar
+        mask_nii1_vel = nii1_vel.mask
+
+        #N II 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii2_vel = maps.emline_gvel_nii2_6585
+        values_nii2_vel = nii2_vel.value
+        ivar_nii2_vel = nii2_vel.ivar
+        mask_nii2_vel = nii2_vel.mask
+
+        #SII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii1_vel = maps.emline_gvel_sii1_6718
+        values_sii1_vel = sii1_vel.value
+        ivar_sii1_vel = sii1_vel.ivar
+        mask_sii1_vel = sii1_vel.mask
+
+        #SII 2 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii2_vel = maps.emline_gvel_sii2_6732
+        values_sii2_vel = sii2_vel.value
+        ivar_sii2_vel = sii2_vel.ivar
+        mask_sii2_vel = sii2_vel.mask
+
+        #Stellar Vel 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        stellar_vel = maps.stellar_vel
+        values_stellar_vel = stellar_vel.value
+        ivar_stellar_vel = stellar_vel.ivar
+        mask_stellar_vel = stellar_vel.mask
+        if i==0:
+            d=0
+            f=np.size(values_ha_vel)
+        else:
+            d=last_step
+            f=last_step+np.size(values_ha_vel)
+
+        values_ha_vel_combined1[d:f]=values_ha_vel.flatten()
+        values_oii1_vel_combined1[d:f]=values_oii1_vel.flatten()
+        values_oii2_vel_combined1[d:f]=values_oii2_vel.flatten()
+        values_hthe_vel_combined1[d:f]=values_hthe_vel.flatten()
+        values_heta_vel_combined1[d:f]=values_heta_vel.flatten()
+        values_neiii1_vel_combined1[d:f]=values_neiii1_vel.flatten()
+        values_neiii2_vel_combined1[d:f]=values_neiii2_vel.flatten()
+        values_hzet_vel_combined1[d:f]=values_hzet_vel.flatten()
+        values_heps_vel_combined1[d:f]=values_heps_vel.flatten()
+        values_hdel_vel_combined1[d:f]=values_hdel_vel.flatten()
+        values_hgam_vel_combined1[d:f]=values_hgam_vel.flatten()
+        values_heii_vel_combined1[d:f]=values_heii_vel.flatten()
+        values_hb_vel_combined1[d:f]=values_hb_vel.flatten()
+        values_oiii1_vel_combined1[d:f]=values_oiii1_vel.flatten()
+        values_oiii2_vel_combined1[d:f]=values_oiii2_vel.flatten()
+        values_hei_vel_combined1[d:f]=values_hei_vel.flatten()
+        values_oi1_vel_combined1[d:f]=values_oi1_vel.flatten()
+        values_oi2_vel_combined1[d:f]=values_oi2_vel.flatten()
+        values_nii1_vel_combined1[d:f]=values_nii1_vel.flatten()
+        values_nii2_vel_combined1[d:f]=values_nii2_vel.flatten()
+        values_sii1_vel_combined1[d:f]=values_sii1_vel.flatten()
+        values_sii2_vel_combined1[d:f]=values_sii2_vel.flatten()
+        values_stellar_vel_combined1[d:f]=values_stellar_vel.flatten()
+       
+        
+        last_step=last_step+np.size(values_ha_vel)
+
+
+    values=np.column_stack([values_ha_vel_combined1, values_oii1_vel_combined1,values_oii2_vel_combined1, values_hthe_vel_combined1, values_heta_vel_combined1,  values_neiii1_vel_combined1, values_neiii2_vel_combined1, values_hzet_vel_combined1, values_heps_vel_combined1, values_hdel_vel_combined1, values_hgam_vel_combined1, values_heii_vel_combined1, values_hb_vel_combined1, values_oiii1_vel_combined1, values_oiii2_vel_combined1, values_hei_vel_combined1, values_oi1_vel_combined1, values_oi2_vel_combined1, values_nii1_vel_combined1, values_nii2_vel_combined1, values_sii1_vel_combined1, values_sii2_vel_combined1, values_stellar_vel_combined1])
+    values = StandardScaler().fit_transform(values) #Scale the data to mean 0 and std of 1
+    pca = PCA(n_components=Num_PCA_Vectors)
+    principalComponents = pca.fit_transform(values)
+    
+    np.savetxt(Group_Name +str('_PC_Vectors'),pca.components_)
+    np.savetxt(Group_Name +str('_PC_Variance'),pca.explained_variance_)
+    
+    return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
 
 
 #Importing All MaNGA Data from DPRall Schema
@@ -3027,11 +3564,40 @@ bin4_SFG=bin4_SFG.drop(bin4_SFG.index[344])
 
 #Functions for PCA Defined at start of script
 
-#galaxy=galaxy_profile_plot_combined(bin1_SFG.loc[:,'plateifu'],3,6)
+#QG
 
- 
-a=galaxy_profile_plot_combined_vel(QG.loc[:,'plateifu'],3)  
+galaxy_combined_vel_PCA(bin4_QG.loc[:,'plateifu'],3,'bin4_QG')
+
+galaxy_combined_vel_PCA(bin1_QG.loc[:,'plateifu'],3,'bin5_QG')
+
+#SFG
+galaxy_combined_vel_PCA(bin1_SFG.loc[:,'plateifu'],3,'bin1_SFG')
+
+galaxy_combined_vel_PCA(bin2_SFG.loc[:,'plateifu'],3,'bin2_SFG')
+
+galaxy_combined_vel_PCA(bin3_SFG.loc[:,'plateifu'],3,'bin3_SFG')
+
+galaxy_combined_vel_PCA(bin4_SFG.loc[:,'plateifu'],3,'bin4_SFG')
+
+#GVG
+galaxy_combined_vel_PCA(bin2_GVG.loc[:,'plateifu'],3,'bin2_GVG')
+
+galaxy_combined_vel_PCA(bin3_GVG.loc[:,'plateifu'],3,'bin3_GVG')
+
+galaxy_combined_vel_PCA(bin4_GVG.loc[:,'plateifu'],3,'bin4_GVG')
 
 
-#combind=galaxy_profile_plot_combined(GVG.loc[:,'plateifu'],3,6)
+#All of same type, no mass bins 
+galaxy_combined_vel_PCA(SFG.loc[:,'plateifu'],3,'All_SFG')
+
+galaxy_combined_vel_PCA(QG.loc[:,'plateifu'],3,'All_QG')
+
+galaxy_combined_vel_PCA(GVG.loc[:,'plateifu'],3,'All_GVG')
+
+
+
+
+
+
+
 
