@@ -3564,35 +3564,35 @@ bin4_SFG=bin4_SFG.drop(bin4_SFG.index[344])
 
 #Functions for PCA Defined at start of script
 
-#QG
+# #QG
 
-galaxy_combined_vel_PCA(bin4_QG.loc[:,'plateifu'],3,'bin4_QG')
+# galaxy_combined_vel_PCA(bin4_QG.loc[:,'plateifu'],3,'bin4_QG')
 
-galaxy_combined_vel_PCA(bin1_QG.loc[:,'plateifu'],3,'bin5_QG')
+# galaxy_combined_vel_PCA(bin5_QG.loc[:,'plateifu'],3,'bin5_QG')
 
-#SFG
-galaxy_combined_vel_PCA(bin1_SFG.loc[:,'plateifu'],3,'bin1_SFG')
+# #SFG
+# galaxy_combined_vel_PCA(bin1_SFG.loc[:,'plateifu'],3,'bin1_SFG')
 
-galaxy_combined_vel_PCA(bin2_SFG.loc[:,'plateifu'],3,'bin2_SFG')
+# galaxy_combined_vel_PCA(bin2_SFG.loc[:,'plateifu'],3,'bin2_SFG')
 
-galaxy_combined_vel_PCA(bin3_SFG.loc[:,'plateifu'],3,'bin3_SFG')
+# galaxy_combined_vel_PCA(bin3_SFG.loc[:,'plateifu'],3,'bin3_SFG')
 
-galaxy_combined_vel_PCA(bin4_SFG.loc[:,'plateifu'],3,'bin4_SFG')
+# galaxy_combined_vel_PCA(bin4_SFG.loc[:,'plateifu'],3,'bin4_SFG')
 
-#GVG
-galaxy_combined_vel_PCA(bin2_GVG.loc[:,'plateifu'],3,'bin2_GVG')
+# #GVG
+# galaxy_combined_vel_PCA(bin2_GVG.loc[:,'plateifu'],3,'bin2_GVG')
 
-galaxy_combined_vel_PCA(bin3_GVG.loc[:,'plateifu'],3,'bin3_GVG')
+# galaxy_combined_vel_PCA(bin3_GVG.loc[:,'plateifu'],3,'bin3_GVG')
 
-galaxy_combined_vel_PCA(bin4_GVG.loc[:,'plateifu'],3,'bin4_GVG')
+# galaxy_combined_vel_PCA(bin4_GVG.loc[:,'plateifu'],3,'bin4_GVG')
 
 
-#All of same type, no mass bins 
-galaxy_combined_vel_PCA(SFG.loc[:,'plateifu'],3,'All_SFG')
+# #All of same type, no mass bins 
+# galaxy_combined_vel_PCA(SFG.loc[:,'plateifu'],3,'All_SFG')
 
-galaxy_combined_vel_PCA(QG.loc[:,'plateifu'],3,'All_QG')
+# galaxy_combined_vel_PCA(QG.loc[:,'plateifu'],3,'All_QG')
 
-galaxy_combined_vel_PCA(GVG.loc[:,'plateifu'],3,'All_GVG')
+# galaxy_combined_vel_PCA(GVG.loc[:,'plateifu'],3,'All_GVG')
 
 
 
