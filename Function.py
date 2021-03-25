@@ -3181,6 +3181,17 @@ def galaxy_combined_vel_PCA(plateifu,Num_PCA_Vectors,Group_Name):
     
     return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
 
+def difference_finder(vectors):
+    dif=np.zeros([3,23,23])
+    for i_variable in range (23):
+        for i_pc in range (3):
+            for i_variables in range (23):
+                dif[i_pc,i_variable,i_variables]=vectors[i_pc,i_variable]-vectors[i_pc,i_variables]
+    return(dif)
+
+def difference_lookup(vectors,PC_Vector,variable1,variable2):
+    a=difference_finder(vectors)
+    return(a[PC_Vector,d[variable1],d[variable2]])
 
 
 
@@ -3194,7 +3205,7 @@ data=pd.read_csv('CompleteTable.csv')
    
 e=pd.DataFrame(['7977-3704','8139-12701','8258-9102','8317-1901'])
 
-b=galaxy_combined_vel_PCA(e.loc[:,0],3,'Test')
+# b=galaxy_combined_vel_PCA(e.loc[:,0],3,'Test')
 
 # c=galaxy_profile_plot_global_combined(data.loc[:,'plateifu'],3,8)
 
@@ -3204,9 +3215,44 @@ b=galaxy_combined_vel_PCA(e.loc[:,0],3,'Test')
 # im = Image('8139-12701',release='DR15')
 # im.plot()
 
+d= {
+  "Ha": 0,
+  "OII(1)": 1,
+  "OII(2)": 2,
+  'H The': 3,
+  'H Eta': 4,
+  'Ne III(1)': 5,
+  'Ne III(2)': 6,
+  'H Zeta': 7,
+  'H Eps': 8,
+  'H Del': 9,
+  'H Gam': 10,
+  'He II': 11,
+  'Hb': 12,
+  'OIII(1)':13,
+  'OIII(2)':14,
+  'He I': 15,
+  'OI(1)': 16,
+  'OI(2)': 17,
+  'NII(1)': 18,
+  'NII(2)': 19,
+  'SII(1)': 20,
+  'SII(2)': 21,
+  'Stellar': 22,
+}
+
+test=np.loadtxt('Test_PC_Vectors.txt')
+
+a=difference_lookup(test,1,'H Del','Stellar')
 
 
 
+
+# test_dif=np.zeros([3,23,23])
+# for i_variable in range (23):
+#     for i_pc in range (3):
+#         for i_variables in range (23):
+#             test_dif[i_pc,i_variable,i_variables]=test[i_pc,i_variable]-test[i_pc,i_variables]
 
 
 

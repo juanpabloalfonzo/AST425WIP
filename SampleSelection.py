@@ -3213,6 +3213,50 @@ def galaxy_combined_vel_PCA(plateifu,Num_PCA_Vectors,Group_Name):
     return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
 
 
+#Dictonary that will be useful for the next family of functions 
+d= {
+  "Ha": 0,
+  "OII(1)": 1,
+  "OII(2)": 2,
+  'H The': 3,
+  'H Eta': 4,
+  'Ne III(1)': 5,
+  'Ne III(2)': 6,
+  'H Zeta': 7,
+  'H Eps': 8,
+  'H Del': 9,
+  'H Gam': 10,
+  'He II': 11,
+  'Hb': 12,
+  'OIII(1)':13,
+  'OIII(2)':14,
+  'He I': 15,
+  'OI(1)': 16,
+  'OI(2)': 17,
+  'NII(1)': 18,
+  'NII(2)': 19,
+  'SII(1)': 20,
+  'SII(2)': 21,
+  'Stellar': 22,
+}
+
+#Function takes a numpy array corresponding to PC vectors and finds the difference between all variables across all PC Vectors
+def difference_finder(vectors):
+    dif=np.zeros([3,23,23])
+    for i_variable in range (23):
+        for i_pc in range (3):
+            for i_variables in range (23):
+                dif[i_pc,i_variable,i_variables]=vectors[i_pc,i_variable]-vectors[i_pc,i_variables]
+    return(dif)
+
+#Takes the output of difference_finder and uses the dictonary to find a specific difference between variables across a given set of PC Vectors
+def difference_lookup(vectors,PC_Vector,variable1,variable2):
+    a=difference_finder(vectors)
+    return(a[PC_Vector,d[variable1],d[variable2]])
+
+
+
+
 #Importing All MaNGA Data from DPRall Schema
 data=pd.read_csv('CompleteTable.csv')
 
@@ -3564,40 +3608,28 @@ bin4_SFG=bin4_SFG.drop(bin4_SFG.index[344])
 
 #Functions for PCA Defined at start of script
 
-# #QG
+#Importing all the PC Vectors found using combined_vel_PCA
 
-# galaxy_combined_vel_PCA(bin4_QG.loc[:,'plateifu'],3,'bin4_QG')
-
-# galaxy_combined_vel_PCA(bin5_QG.loc[:,'plateifu'],3,'bin5_QG')
-
-# #SFG
-# galaxy_combined_vel_PCA(bin1_SFG.loc[:,'plateifu'],3,'bin1_SFG')
-
-# galaxy_combined_vel_PCA(bin2_SFG.loc[:,'plateifu'],3,'bin2_SFG')
-
-# galaxy_combined_vel_PCA(bin3_SFG.loc[:,'plateifu'],3,'bin3_SFG')
-
-# galaxy_combined_vel_PCA(bin4_SFG.loc[:,'plateifu'],3,'bin4_SFG')
-
-# #GVG
-# galaxy_combined_vel_PCA(bin2_GVG.loc[:,'plateifu'],3,'bin2_GVG')
-
-# galaxy_combined_vel_PCA(bin3_GVG.loc[:,'plateifu'],3,'bin3_GVG')
-
-# galaxy_combined_vel_PCA(bin4_GVG.loc[:,'plateifu'],3,'bin4_GVG')
+bin1_QG_PC_Vectors=np.loadtxt('bin1_QG_PC_Vectors')
+bin2_QG_PC_Vectors=np.loadtxt('bin2_QG_PC_Vectors')
+bin3_QG_PC_Vectors=np.loadtxt('bin3_QG_PC_Vectors')
+bin4_QG_PC_Vectors=np.loadtxt('bin4_QG_PC_Vectors')
+bin5_QG_PC_Vectors=np.loadtxt('bin5_QG_PC_Vectors')
+All_QG_PC_Vectors=np.loadtxt('All_QG_PC_Vectors')
 
 
-# #All of same type, no mass bins 
-# galaxy_combined_vel_PCA(SFG.loc[:,'plateifu'],3,'All_SFG')
+bin2_GVG_Vectors=np.loadtxt('bin2_GVG_PC_Vectors')
+bin3_GVG_Vectors=np.loadtxt('bin3_GVG_PC_Vectors')
+bin4_GVG_Vectors=np.loadtxt('bin4_GVG_PC_Vectors')
+All_GVG_PC_Vectors=np.loadtxt('All_GVG_PC_Vectors')
 
-# galaxy_combined_vel_PCA(QG.loc[:,'plateifu'],3,'All_QG')
+bin1_SFG_PC_Vectors=np.loadtxt('bin1_SFG_PC_Vectors')
+bin2_SFG_PC_Vectors=np.loadtxt('bin2_SFG_PC_Vectors')
+bin3_SFG_PC_Vectors=np.loadtxt('bin3_SFG_PC_Vectors')
+bin4_SFG_PC_Vectors=np.loadtxt('bin4_SFG_PC_Vectors')
+All_SFG_PC_Vectors=np.loadtxt('All_SFG_PC_Vectors')
 
-# galaxy_combined_vel_PCA(GVG.loc[:,'plateifu'],3,'All_GVG')
-
-
-
-
-
+bin1_QG_dif=difference_finder(bin1_QG_PC_Vectors)
 
 
 
