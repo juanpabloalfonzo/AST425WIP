@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import scipy as sp
 from scipy.optimize import curve_fit
@@ -23,7 +25,7 @@ from sklearn.decomposition import PCA
 from sklearn.utils import resample
 
 
-plt.ion() #Makes plots interactive in ipython
+# plt.ion() #Makes plots interactive in ipython
 #plt.ioff() #Runs code without opening figures 
 
 # set config attributes and turn on global downloads of Marvin data
@@ -3213,7 +3215,7 @@ def galaxy_combined_vel_PCA(plateifu,Num_PCA_Vectors,Group_Name):
     return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
 
 
-#Dictonary that will be useful for the next family of functions 
+#Dictonaries that will be useful for the next family of functions 
 d= {
   "Ha": 0,
   "OII(1)": 1,
@@ -3238,6 +3240,55 @@ d= {
   'SII(1)': 20,
   'SII(2)': 21,
   'Stellar': 22,
+  0:0,
+  1:1,
+  2:2,
+  3:3,
+  4:4,
+  5:5,
+  6:6,
+  7:7,
+  8:8,
+  9:9,
+  10:10,
+  11:11,
+  12:12,
+  13:13,
+  14:14,
+  15:15,
+  16:16,
+  17:17,
+  18:18,
+  19:19,
+  20:20,
+  21:21,
+  22:22,
+}
+
+d2= {
+  0:'H' r'$\alpha$',
+  1:"OII(1)",
+  2: "OII(2)",
+  3:'H' r'$\theta$',
+  4:'H' r'$\eta$',
+  5:'Ne III(1)',
+  6:'Ne III(2)',
+  7: 'H' r'$\zeta$',
+  8:'H' r'$\epsilon$',
+  9:'H' r'$\delta$',
+  10:'H' r'$\gamma$',
+  11:'He II',
+  12:'H' r'$\beta$',
+  13:'OIII(1)',
+  14:'OIII(2)',
+  15:'He I',
+  16:'OI(1)',
+  17:'OI(2)',
+  18:'NII(1)',
+  19:'NII(2)',
+  20:'SII(1)',
+  21:'SII(2)',
+  22:'Stellar',
 }
 
 #Function takes a numpy array corresponding to PC vectors and finds the difference between all variables across all PC Vectors
@@ -3618,9 +3669,9 @@ bin5_QG_PC_Vectors=np.loadtxt('bin5_QG_PC_Vectors')
 All_QG_PC_Vectors=np.loadtxt('All_QG_PC_Vectors')
 
 
-bin2_GVG_Vectors=np.loadtxt('bin2_GVG_PC_Vectors')
-bin3_GVG_Vectors=np.loadtxt('bin3_GVG_PC_Vectors')
-bin4_GVG_Vectors=np.loadtxt('bin4_GVG_PC_Vectors')
+bin2_GVG_PC_Vectors=np.loadtxt('bin2_GVG_PC_Vectors')
+bin3_GVG_PC_Vectors=np.loadtxt('bin3_GVG_PC_Vectors')
+bin4_GVG_PC_Vectors=np.loadtxt('bin4_GVG_PC_Vectors')
 All_GVG_PC_Vectors=np.loadtxt('All_GVG_PC_Vectors')
 
 bin1_SFG_PC_Vectors=np.loadtxt('bin1_SFG_PC_Vectors')
@@ -3629,7 +3680,110 @@ bin3_SFG_PC_Vectors=np.loadtxt('bin3_SFG_PC_Vectors')
 bin4_SFG_PC_Vectors=np.loadtxt('bin4_SFG_PC_Vectors')
 All_SFG_PC_Vectors=np.loadtxt('All_SFG_PC_Vectors')
 
-bin1_QG_dif=difference_finder(bin1_QG_PC_Vectors)
 
 
+#Sample Case 
+PC_Vector_Names=np.array([0,1,2])
 
+bin1_QG_dif=difference_lookup(bin1_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin2_QG_dif=difference_lookup(bin2_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin3_QG_dif=difference_lookup(bin3_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin4_QG_dif=difference_lookup(bin4_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin5_QG_dif=difference_lookup(bin5_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+All_QG_dif=difference_lookup(All_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+
+
+bin1_SFG_dif=difference_lookup(bin1_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin2_SFG_dif=difference_lookup(bin2_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin3_SFG_dif=difference_lookup(bin3_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin4_SFG_dif=difference_lookup(bin4_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+All_SFG_dif=difference_lookup(All_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+
+bin2_GVG_dif=difference_lookup(bin2_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin3_GVG_dif=difference_lookup(bin3_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+bin4_GVG_dif=difference_lookup(bin4_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+All_GVG_dif=difference_lookup(All_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+
+
+# plt.title('Ha and OII Difference in Correlation')
+# plt.scatter(PC_Vector_Names,bin1_QG_dif,label='Bin 1 QG')
+# plt.scatter(PC_Vector_Names,bin2_QG_dif,label='Bin 2 QG')
+# plt.scatter(PC_Vector_Names,bin3_QG_dif,label='Bin 3 QG')
+# plt.scatter(PC_Vector_Names,bin4_QG_dif,label='Bin 4 QG')
+# plt.scatter(PC_Vector_Names,bin5_QG_dif,label='Bin 5 QG')
+# plt.scatter(PC_Vector_Names,All_QG_dif,label='All QG')
+
+# plt.scatter(PC_Vector_Names,bin1_SFG_dif,label='Bin 1 SFG')
+# plt.scatter(PC_Vector_Names,bin2_SFG_dif,label='Bin 2 SFG')
+# plt.scatter(PC_Vector_Names,bin3_SFG_dif,label='Bin 3 SFG')
+# plt.scatter(PC_Vector_Names,bin4_SFG_dif,label='Bin 4 SFG')
+# plt.scatter(PC_Vector_Names,All_SFG_dif,label='All SFG')
+
+# plt.scatter(PC_Vector_Names,bin2_GVG_dif,label='Bin 2 GVG')
+# plt.scatter(PC_Vector_Names,bin3_GVG_dif,label='Bin 3 GVG')
+# plt.scatter(PC_Vector_Names,bin4_GVG_dif,label='Bin 4 GVG')
+# plt.scatter(PC_Vector_Names,All_GVG_dif,label='All GVG')
+
+# plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
+# plt.ylabel('Difference in Correlation')
+# plt.show()
+# plt.figure()
+
+
+#Generalization of above 
+fig,axs=plt.subplots(23,23,figsize=(40,40))
+fig.suptitle('Correlation Between Variables \n for Given Galaxy Groups',fontsize=64)
+for i_variable_row in range(23):
+    for i_variable_column in range(23):
+        bin1_QG_dif=difference_lookup(bin1_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin2_QG_dif=difference_lookup(bin2_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin3_QG_dif=difference_lookup(bin3_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin4_QG_dif=difference_lookup(bin4_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin5_QG_dif=difference_lookup(bin5_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        All_QG_dif=difference_lookup(All_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+
+
+        bin1_SFG_dif=difference_lookup(bin1_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin2_SFG_dif=difference_lookup(bin2_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin3_SFG_dif=difference_lookup(bin3_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin4_SFG_dif=difference_lookup(bin4_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        All_SFG_dif=difference_lookup(All_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+
+        bin2_GVG_dif=difference_lookup(bin2_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin3_GVG_dif=difference_lookup(bin3_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        bin4_GVG_dif=difference_lookup(bin4_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+        All_GVG_dif=difference_lookup(All_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_QG_dif,label='Bin 1 QG', color='maroon')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_QG_dif,label='Bin 2 QG', color='saddlebrown')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_QG_dif,label='Bin 3 QG', color='darkorange')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_QG_dif,label='Bin 4 QG', color='pink')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin5_QG_dif,label='Bin 5 QG', color='gold')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_QG_dif,label='All QG',color='red')
+
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_SFG_dif,label='Bin 1 SFG',color='violet')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_SFG_dif,label='Bin 2 SFG',color='steelblue')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_SFG_dif,label='Bin 3 SFG',color='navy')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_SFG_dif,label='Bin 4 SFG',color='aquamarine')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_SFG_dif,label='All SFG',color='blue')
+
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_GVG_dif,label='Bin 2 GVG',color='darkolivegreen')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_GVG_dif,label='Bin 3 GVG',color='lawngreen')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_GVG_dif,label='Bin 4 GVG',color='springgreen')
+        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_GVG_dif,label='All GVG', color='green')
+
+        
+        axs[i_variable_row,i_variable_column].set_xlim((-0.5,2.5))
+        axs[i_variable_row,i_variable_column].set_ylim((-1,1))
+        if i_variable_row== 22:
+            axs[i_variable_row,i_variable_column].set_xlabel(str(d2[i_variable_column]), fontsize=24)
+        if i_variable_column==0:
+            axs[i_variable_row,i_variable_column].set_ylabel(str(d2[i_variable_row]), fontsize=24)
+        if i_variable_row != 22:
+            axs[i_variable_row,i_variable_column].set_xticklabels('')
+        if i_variable_column !=0:
+            axs[i_variable_row,i_variable_column].set_yticklabels('')
+
+plt.legend(bbox_to_anchor=(1, 15), loc='center left', fontsize=30)
+plt.savefig('MatrixPlots.pdf')
+    
