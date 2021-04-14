@@ -3214,6 +3214,592 @@ def galaxy_combined_vel_PCA(plateifu,Num_PCA_Vectors,Group_Name):
     
     return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
 
+def galaxy_combined_vel_PCA_resampled(plateifu,Num_PCA_Vectors):
+    
+    values_ha_vel_combined=[]
+    values_oii1_vel_combined=[]
+    values_oii2_vel_combined=[]
+    values_hthe_vel_combined=[]
+    values_heta_vel_combined=[]
+    values_neiii1_vel_combined=[]
+    values_neiii2_vel_combined=[]
+    values_hzet_vel_combined=[]
+    values_heps_vel_combined=[]
+    values_hdel_vel_combined=[]
+    values_hgam_vel_combined=[]
+    values_heii_vel_combined=[]
+    values_hb_vel_combined=[]
+    values_oiii1_vel_combined=[]
+    values_oiii2_vel_combined=[]
+    values_hei_vel_combined=[]
+    values_oi1_vel_combined=[]
+    values_oi2_vel_combined=[]
+    values_nii1_vel_combined=[]
+    values_nii2_vel_combined=[]
+    values_sii1_vel_combined=[]
+    values_sii2_vel_combined=[]
+    values_stellar_vel_combined=[]
+    for i in range(len(plateifu)):
+        #H Alpha
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        ha_vel = maps.emline_gvel_ha_6564
+        values_ha_vel = ha_vel.value
+        ivar_ha_vel = ha_vel.ivar
+        mask_ha_vel = ha_vel.mask
+
+        #OII 3727
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii1_vel = maps.emline_gvel_oii_3727
+        values_oii1_vel = oii1_vel.value
+        ivar_oii1_vel = oii1_vel.ivar
+        mask_oii1_vel = oii1_vel.mask
+
+        #OII 3729
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii2_vel = maps.emline_gvel_oii_3729
+        values_oii2_vel = oii2_vel.value
+        ivar_oii2_vel = oii2_vel.ivar
+        mask_oii2_vel = oii2_vel.mask
+
+        #H Theta 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hthe_vel = maps.emline_gvel_hthe_3798
+        values_hthe_vel = hthe_vel.value
+        ivar_hthe_vel = hthe_vel.ivar
+        mask_hthe_vel = hthe_vel.mask
+
+       #H Eta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heta_vel = maps.emline_gvel_heta_3836
+        values_heta_vel = heta_vel.value
+        ivar_heta_vel = heta_vel.ivar
+        mask_heta_vel = heta_vel.mask
+
+        #Ne III 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii1_vel = maps.emline_gvel_neiii1_3869
+        values_neiii1_vel = neiii1_vel.value
+        ivar_neiii1_vel = neiii1_vel.ivar
+        mask_neiii1_vel = neiii1_vel.mask
+
+        #Ne III 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii2_vel = maps.emline_gvel_neiii2_3968
+        values_neiii2_vel = neiii2_vel.value
+        ivar_neiii2_vel = neiii2_vel.ivar
+        mask_neiii2_vel = neiii2_vel.mask
+
+        #H Zeta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hzet_vel = maps.emline_gvel_hzet_3890
+        values_hzet_vel = hzet_vel.value
+        ivar_hzet_vel = hzet_vel.ivar
+        mask_hzet_vel = hzet_vel.mask
+
+        #H Episilon 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heps_vel = maps.emline_gvel_heps_3971
+        values_heps_vel = heps_vel.value
+        ivar_heps_vel = heps_vel.ivar
+        mask_heps_vel = heps_vel.mask
+
+        #H Delta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hdel_vel = maps.emline_gvel_hdel_4102
+        values_hdel_vel = hdel_vel.value
+        ivar_hdel_vel = hdel_vel.ivar
+        mask_hdel_vel = hdel_vel.mask
+
+        #H Gamma
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hgam_vel = maps.emline_gvel_hgam_4341
+        values_hgam_vel = hgam_vel.value
+        ivar_hgam_vel = hgam_vel.ivar
+        mask_hgam_vel = hgam_vel.mask
+
+        #He II 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heii_vel = maps.emline_gvel_heii_4687
+        values_heii_vel = heii_vel.value
+        ivar_heii_vel = heii_vel.ivar
+        mask_heii_vel = heii_vel.mask
+
+        #H Beta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hb_vel = maps.emline_gvel_hb_4862
+        values_hb_vel = hb_vel.value
+        ivar_hb_vel = hb_vel.ivar
+        mask_hb_vel = hb_vel.mask
+
+        #OIII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii1_vel = maps.emline_gvel_oiii1_4960
+        values_oiii1_vel = oiii1_vel.value
+        ivar_oiii1_vel = oiii1_vel.ivar
+        mask_oiii1_vel = oiii1_vel.mask
+
+        #OIII 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii2_vel = maps.emline_gvel_oiii2_5008
+        values_oiii2_vel = oiii2_vel.value
+        ivar_oiii2_vel = oiii2_vel.ivar
+        mask_oiii2_vel = oiii2_vel.mask
+
+        #He I
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hei_vel = maps.emline_gvel_hei_5877
+        values_hei_vel = hei_vel.value
+        ivar_hei_vel = hei_vel.ivar
+        mask_hei_vel = hei_vel.mask
+
+        #OI 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi1_vel = maps.emline_gvel_oi1_6302
+        values_oi1_vel = oi1_vel.value
+        ivar_oi1_vel = oi1_vel.ivar
+        mask_oi1_vel = oi1_vel.mask
+
+        #OI 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi2_vel = maps.emline_gvel_oi2_6365
+        values_oi2_vel = oi2_vel.value
+        ivar_oi2_vel = oi2_vel.ivar
+        mask_oi2_vel = oi2_vel.mask
+
+        #N II 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii1_vel = maps.emline_gvel_nii1_6549
+        values_nii1_vel = nii1_vel.value
+        ivar_nii1_vel = nii1_vel.ivar
+        mask_nii1_vel = nii1_vel.mask
+
+        #N II 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii2_vel = maps.emline_gvel_nii2_6585
+        values_nii2_vel = nii2_vel.value
+        ivar_nii2_vel = nii2_vel.ivar
+        mask_nii2_vel = nii2_vel.mask
+
+        #SII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii1_vel = maps.emline_gvel_sii1_6718
+        values_sii1_vel = sii1_vel.value
+        ivar_sii1_vel = sii1_vel.ivar
+        mask_sii1_vel = sii1_vel.mask
+
+        #SII 2 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii2_vel = maps.emline_gvel_sii2_6732
+        values_sii2_vel = sii2_vel.value
+        ivar_sii2_vel = sii2_vel.ivar
+        mask_sii2_vel = sii2_vel.mask
+
+        #Stellar Vel 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        stellar_vel = maps.stellar_vel
+        values_stellar_vel = stellar_vel.value
+        ivar_stellar_vel = stellar_vel.ivar
+        mask_stellar_vel = stellar_vel.mask
+
+
+        values_ha_vel_combined.append(values_ha_vel.flatten())
+        values_oii1_vel_combined.append(values_oii1_vel.flatten())
+        values_oii2_vel_combined.append(values_oii2_vel.flatten())
+        values_hthe_vel_combined.append(values_hthe_vel.flatten())
+        values_heta_vel_combined.append(values_heta_vel.flatten())
+        values_neiii1_vel_combined.append(values_neiii1_vel.flatten())
+        values_neiii2_vel_combined.append(values_neiii2_vel.flatten())
+        values_hzet_vel_combined.append(values_hzet_vel.flatten())
+        values_heps_vel_combined.append(values_heps_vel.flatten())
+        values_hdel_vel_combined.append(values_hdel_vel.flatten())
+        values_hgam_vel_combined.append(values_hgam_vel.flatten())
+        values_heii_vel_combined.append(values_heii_vel.flatten())
+        values_hb_vel_combined.append(values_hb_vel.flatten())
+        values_oiii1_vel_combined.append(values_oiii1_vel.flatten())
+        values_oiii2_vel_combined.append(values_oiii2_vel.flatten())
+        values_hei_vel_combined.append(values_hei_vel.flatten())
+        values_oi1_vel_combined.append(values_oi1_vel.flatten())
+        values_oi2_vel_combined.append(values_oi2_vel.flatten())
+        values_nii1_vel_combined.append(values_nii1_vel.flatten())
+        values_nii2_vel_combined.append(values_nii2_vel.flatten())
+        values_sii1_vel_combined.append(values_sii1_vel.flatten())
+        values_sii2_vel_combined.append(values_sii2_vel.flatten())
+        values_stellar_vel_combined.append(values_stellar_vel.flatten())
+
+
+    #Makes arrays to the appropriate size to fit the pixel maps of the different galaxies
+    ha_vel=np.zeros(len(plateifu))
+    oii1_vel=np.zeros(len(plateifu))
+    oii2_vel=np.zeros(len(plateifu))
+    hthe_vel=np.zeros(len(plateifu))
+    heta_vel=np.zeros(len(plateifu))
+    neiii1_vel=np.zeros(len(plateifu))
+    neiii2_vel=np.zeros(len(plateifu))
+    hzet_vel=np.zeros(len(plateifu))
+    heps_vel=np.zeros(len(plateifu))
+    hdel_vel=np.zeros(len(plateifu))
+    hgam_vel=np.zeros(len(plateifu))
+    heii_vel=np.zeros(len(plateifu))
+    hb_vel=np.zeros(len(plateifu))
+    oiii1_vel=np.zeros(len(plateifu))
+    oiii2_vel=np.zeros(len(plateifu))
+    hei_vel=np.zeros(len(plateifu))
+    oi1_vel=np.zeros(len(plateifu))
+    oi2_vel=np.zeros(len(plateifu))
+    nii1_vel=np.zeros(len(plateifu))
+    nii2_vel=np.zeros(len(plateifu))
+    sii1_vel=np.zeros(len(plateifu))
+    sii2_vel=np.zeros(len(plateifu))
+    stellar_vel=np.zeros(len(plateifu))
+    for j_galaxy in range(len(plateifu)):
+        ha_vel[j_galaxy]=len(values_ha_vel_combined[j_galaxy])
+        oii1_vel[j_galaxy]=len(values_oii1_vel_combined[j_galaxy])
+        oii2_vel[j_galaxy]=len(values_oii2_vel_combined[j_galaxy])
+        hthe_vel[j_galaxy]=len(values_hthe_vel_combined[j_galaxy])
+        heta_vel[j_galaxy]=len(values_heta_vel_combined[j_galaxy])
+        neiii1_vel[j_galaxy]=len(values_neiii1_vel_combined[j_galaxy])
+        neiii2_vel[j_galaxy]=len(values_neiii2_vel_combined[j_galaxy])
+        hzet_vel[j_galaxy]=len(values_hzet_vel_combined[j_galaxy])
+        heps_vel[j_galaxy]=len(values_heps_vel_combined[j_galaxy])
+        hdel_vel[j_galaxy]=len(values_hdel_vel_combined[j_galaxy])
+        hgam_vel[j_galaxy]=len(values_hgam_vel_combined[j_galaxy])
+        heii_vel[j_galaxy]=len(values_heii_vel_combined[j_galaxy])
+        hb_vel[j_galaxy]=len(values_hb_vel_combined[j_galaxy])
+        oiii1_vel[j_galaxy]=len(values_oiii1_vel_combined[j_galaxy])
+        oiii2_vel[j_galaxy]=len(values_oiii2_vel_combined[j_galaxy])
+        hei_vel[j_galaxy]=len(values_hei_vel_combined[j_galaxy])
+        oi1_vel[j_galaxy]=len(values_oi1_vel_combined[j_galaxy])
+        oi2_vel[j_galaxy]=len(values_oi2_vel_combined[j_galaxy])
+        nii1_vel[j_galaxy]=len(values_nii1_vel_combined[j_galaxy])
+        nii2_vel[j_galaxy]=len(values_nii2_vel_combined[j_galaxy])
+        sii1_vel[j_galaxy]=len(values_sii1_vel_combined[j_galaxy])
+        sii2_vel[j_galaxy]=len(values_sii2_vel_combined[j_galaxy])
+        stellar_vel[j_galaxy]=len(values_stellar_vel_combined[j_galaxy])
+
+    #Stores the data of each pixel for each galaxy of the same variable in 1D array, this will be fed to PCA
+    values_ha_vel_combined1=np.zeros(int(sum(ha_vel)))
+    values_oii1_vel_combined1=np.zeros(int(sum(oii1_vel)))
+    values_oii2_vel_combined1=np.zeros(int(sum(oii2_vel)))
+    values_hthe_vel_combined1=np.zeros(int(sum(hthe_vel)))
+    values_heta_vel_combined1=np.zeros(int(sum(heta_vel)))
+    values_neiii1_vel_combined1=np.zeros(int(sum(neiii1_vel)))
+    values_neiii2_vel_combined1=np.zeros(int(sum(neiii2_vel)))
+    values_hzet_vel_combined1=np.zeros(int(sum(hzet_vel)))
+    values_heps_vel_combined1=np.zeros(int(sum(heps_vel)))
+    values_hdel_vel_combined1=np.zeros(int(sum(hdel_vel)))
+    values_hgam_vel_combined1=np.zeros(int(sum(hgam_vel)))
+    values_heii_vel_combined1=np.zeros(int(sum(heii_vel)))
+    values_hb_vel_combined1=np.zeros(int(sum(hb_vel)))
+    values_oiii1_vel_combined1=np.zeros(int(sum(oiii1_vel)))
+    values_oiii2_vel_combined1=np.zeros(int(sum(oiii2_vel)))
+    values_hei_vel_combined1=np.zeros(int(sum(hei_vel)))
+    values_oi1_vel_combined1=np.zeros(int(sum(oi1_vel)))
+    values_oi2_vel_combined1=np.zeros(int(sum(oi2_vel)))
+    values_nii1_vel_combined1=np.zeros(int(sum(nii1_vel)))
+    values_nii2_vel_combined1=np.zeros(int(sum(nii2_vel)))
+    values_sii1_vel_combined1=np.zeros(int(sum(sii1_vel)))
+    values_sii2_vel_combined1=np.zeros(int(sum(sii2_vel)))
+    values_stellar_vel_combined1=np.zeros(int(sum(stellar_vel)))
+    last_step=0
+    for i in range(len(plateifu)):
+        #H Alpha
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        ha_vel = maps.emline_gvel_ha_6564
+        values_ha_vel = ha_vel.value
+        ivar_ha_vel = ha_vel.ivar
+        mask_ha_vel = ha_vel.mask
+
+        #OII 3727
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii1_vel = maps.emline_gvel_oii_3727
+        values_oii1_vel = oii1_vel.value
+        ivar_oii1_vel = oii1_vel.ivar
+        mask_oii1_vel = oii1_vel.mask
+
+        #OII 3729
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oii2_vel = maps.emline_gvel_oii_3729
+        values_oii2_vel = oii2_vel.value
+        ivar_oii2_vel = oii2_vel.ivar
+        mask_oii2_vel = oii2_vel.mask
+
+        #H Theta 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hthe_vel = maps.emline_gvel_hthe_3798
+        values_hthe_vel = hthe_vel.value
+        ivar_hthe_vel = hthe_vel.ivar
+        mask_hthe_vel = hthe_vel.mask
+
+       #H Eta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heta_vel = maps.emline_gvel_heta_3836
+        values_heta_vel = heta_vel.value
+        ivar_heta_vel = heta_vel.ivar
+        mask_heta_vel = heta_vel.mask
+
+        #Ne III 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii1_vel = maps.emline_gvel_neiii1_3869
+        values_neiii1_vel = neiii1_vel.value
+        ivar_neiii1_vel = neiii1_vel.ivar
+        mask_neiii1_vel = neiii1_vel.mask
+
+        #Ne III 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        neiii2_vel = maps.emline_gvel_neiii2_3968
+        values_neiii2_vel = neiii2_vel.value
+        ivar_neiii2_vel = neiii2_vel.ivar
+        mask_neiii2_vel = neiii2_vel.mask
+
+        #H Zeta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hzet_vel = maps.emline_gvel_hzet_3890
+        values_hzet_vel = hzet_vel.value
+        ivar_hzet_vel = hzet_vel.ivar
+        mask_hzet_vel = hzet_vel.mask
+
+        #H Episilon 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heps_vel = maps.emline_gvel_heps_3971
+        values_heps_vel = heps_vel.value
+        ivar_heps_vel = heps_vel.ivar
+        mask_heps_vel = heps_vel.mask
+
+        #H Delta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hdel_vel = maps.emline_gvel_hdel_4102
+        values_hdel_vel = hdel_vel.value
+        ivar_hdel_vel = hdel_vel.ivar
+        mask_hdel_vel = hdel_vel.mask
+
+        #H Gamma
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hgam_vel = maps.emline_gvel_hgam_4341
+        values_hgam_vel = hgam_vel.value
+        ivar_hgam_vel = hgam_vel.ivar
+        mask_hgam_vel = hgam_vel.mask
+
+        #He II 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        heii_vel = maps.emline_gvel_heii_4687
+        values_heii_vel = heii_vel.value
+        ivar_heii_vel = heii_vel.ivar
+        mask_heii_vel = heii_vel.mask
+
+        #H Beta
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hb_vel = maps.emline_gvel_hb_4862
+        values_hb_vel = hb_vel.value
+        ivar_hb_vel = hb_vel.ivar
+        mask_hb_vel = hb_vel.mask
+
+        #OIII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii1_vel = maps.emline_gvel_oiii1_4960
+        values_oiii1_vel = oiii1_vel.value
+        ivar_oiii1_vel = oiii1_vel.ivar
+        mask_oiii1_vel = oiii1_vel.mask
+
+        #OIII 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oiii2_vel = maps.emline_gvel_oiii2_5008
+        values_oiii2_vel = oiii2_vel.value
+        ivar_oiii2_vel = oiii2_vel.ivar
+        mask_oiii2_vel = oiii2_vel.mask
+
+        #He I
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        hei_vel = maps.emline_gvel_hei_5877
+        values_hei_vel = hei_vel.value
+        ivar_hei_vel = hei_vel.ivar
+        mask_hei_vel = hei_vel.mask
+
+        #OI 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi1_vel = maps.emline_gvel_oi1_6302
+        values_oi1_vel = oi1_vel.value
+        ivar_oi1_vel = oi1_vel.ivar
+        mask_oi1_vel = oi1_vel.mask
+
+        #OI 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        oi2_vel = maps.emline_gvel_oi2_6365
+        values_oi2_vel = oi2_vel.value
+        ivar_oi2_vel = oi2_vel.ivar
+        mask_oi2_vel = oi2_vel.mask
+
+        #N II 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii1_vel = maps.emline_gvel_nii1_6549
+        values_nii1_vel = nii1_vel.value
+        ivar_nii1_vel = nii1_vel.ivar
+        mask_nii1_vel = nii1_vel.mask
+
+        #N II 2
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        nii2_vel = maps.emline_gvel_nii2_6585
+        values_nii2_vel = nii2_vel.value
+        ivar_nii2_vel = nii2_vel.ivar
+        mask_nii2_vel = nii2_vel.mask
+
+        #SII 1
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii1_vel = maps.emline_gvel_sii1_6718
+        values_sii1_vel = sii1_vel.value
+        ivar_sii1_vel = sii1_vel.ivar
+        mask_sii1_vel = sii1_vel.mask
+
+        #SII 2 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        # get an emission line map
+        sii2_vel = maps.emline_gvel_sii2_6732
+        values_sii2_vel = sii2_vel.value
+        ivar_sii2_vel = sii2_vel.ivar
+        mask_sii2_vel = sii2_vel.mask
+
+        #Stellar Vel 
+        maps = Maps(plateifu=plateifu.iloc[i])
+        stellar_vel = maps.stellar_vel
+        values_stellar_vel = stellar_vel.value
+        ivar_stellar_vel = stellar_vel.ivar
+        mask_stellar_vel = stellar_vel.mask
+        if i==0:
+            d=0
+            f=np.size(values_ha_vel)
+        else:
+            d=last_step
+            f=last_step+np.size(values_ha_vel)
+
+        values_ha_vel_combined1[d:f]=values_ha_vel.flatten()
+        values_oii1_vel_combined1[d:f]=values_oii1_vel.flatten()
+        values_oii2_vel_combined1[d:f]=values_oii2_vel.flatten()
+        values_hthe_vel_combined1[d:f]=values_hthe_vel.flatten()
+        values_heta_vel_combined1[d:f]=values_heta_vel.flatten()
+        values_neiii1_vel_combined1[d:f]=values_neiii1_vel.flatten()
+        values_neiii2_vel_combined1[d:f]=values_neiii2_vel.flatten()
+        values_hzet_vel_combined1[d:f]=values_hzet_vel.flatten()
+        values_heps_vel_combined1[d:f]=values_heps_vel.flatten()
+        values_hdel_vel_combined1[d:f]=values_hdel_vel.flatten()
+        values_hgam_vel_combined1[d:f]=values_hgam_vel.flatten()
+        values_heii_vel_combined1[d:f]=values_heii_vel.flatten()
+        values_hb_vel_combined1[d:f]=values_hb_vel.flatten()
+        values_oiii1_vel_combined1[d:f]=values_oiii1_vel.flatten()
+        values_oiii2_vel_combined1[d:f]=values_oiii2_vel.flatten()
+        values_hei_vel_combined1[d:f]=values_hei_vel.flatten()
+        values_oi1_vel_combined1[d:f]=values_oi1_vel.flatten()
+        values_oi2_vel_combined1[d:f]=values_oi2_vel.flatten()
+        values_nii1_vel_combined1[d:f]=values_nii1_vel.flatten()
+        values_nii2_vel_combined1[d:f]=values_nii2_vel.flatten()
+        values_sii1_vel_combined1[d:f]=values_sii1_vel.flatten()
+        values_sii2_vel_combined1[d:f]=values_sii2_vel.flatten()
+        values_stellar_vel_combined1[d:f]=values_stellar_vel.flatten()
+       
+        
+        last_step=last_step+np.size(values_ha_vel)
+
+    #Resampling Before going into PCA
+    values_ha_vel_combined1=resample(values_ha_vel_combined1)
+    values_oii1_vel_combined1=resample(values_oii1_vel_combined1)
+    values_oii2_vel_combined1=resample(values_oii2_vel_combined1)
+    values_hthe_vel_combined1=resample(values_hthe_vel_combined1)
+    values_heta_vel_combined1=resample(values_heta_vel_combined1)
+    values_neiii1_vel_combined1=resample(values_neiii1_vel_combined1)
+    values_neiii2_vel_combined1=resample(values_neiii2_vel_combined1)
+    values_hzet_vel_combined1=resample(values_hzet_vel_combined1)
+    values_heps_vel_combined1=resample(values_heps_vel_combined1)
+    values_hdel_vel_combined1=resample(values_hdel_vel_combined1)
+    values_hgam_vel_combined1=resample(values_hgam_vel_combined1)
+    values_heii_vel_combined1=resample(values_heii_vel_combined1)
+    values_hb_vel_combined1=resample(values_hb_vel_combined1)
+    values_oiii1_vel_combined1=resample(values_oiii1_vel_combined1)
+    values_oiii2_vel_combined1=resample(values_oiii2_vel_combined1)
+    values_hei_vel_combined1=resample(values_hei_vel_combined1)
+    values_oi1_vel_combined1=resample(values_oi1_vel_combined1)
+    values_oi2_vel_combined1=resample(values_oi2_vel_combined1)
+    values_nii1_vel_combined1=resample(values_nii1_vel_combined1)
+    values_nii2_vel_combined1=resample(values_nii2_vel_combined1)
+    values_sii1_vel_combined1=resample(values_sii1_vel_combined1)
+    values_sii2_vel_combined1=resample(values_sii2_vel_combined1)
+    values_stellar_vel_combined1=resample(values_stellar_vel_combined1)
+
+
+    values=np.column_stack([values_ha_vel_combined1, values_oii1_vel_combined1,values_oii2_vel_combined1, values_hthe_vel_combined1, values_heta_vel_combined1,  values_neiii1_vel_combined1, values_neiii2_vel_combined1, values_hzet_vel_combined1, values_heps_vel_combined1, values_hdel_vel_combined1, values_hgam_vel_combined1, values_heii_vel_combined1, values_hb_vel_combined1, values_oiii1_vel_combined1, values_oiii2_vel_combined1, values_hei_vel_combined1, values_oi1_vel_combined1, values_oi2_vel_combined1, values_nii1_vel_combined1, values_nii2_vel_combined1, values_sii1_vel_combined1, values_sii2_vel_combined1, values_stellar_vel_combined1])
+    values = StandardScaler().fit_transform(values) #Scale the data to mean 0 and std of 1
+    pca = PCA(n_components=Num_PCA_Vectors)
+    principalComponents = pca.fit_transform(values)
+    
+    return(pca.components_,pca.explained_variance_ratio_) #Returns PCA vector components, Variance ratios as an array
+
+
+
+#Boostrapping for combined_vel family
+def bootstrap_combined_vel(plateifu, Num_PCA_Vectors, Num_Variables, reps):
+    PC_Vector_Components=np.zeros([Num_PCA_Vectors,Num_Variables,reps])
+    for i_reps in range(reps): #Randomly samples the inputed data frame of galaxies and does PCA Analysis "reps" number of times
+        b=galaxy_combined_vel_PCA_resampled(plateifu,Num_PCA_Vectors)
+        PC_Vector_Components[:,:,i_reps]=b[0]  
+
+    #Ensures all the eigenvalues of the PC vectors are of the same sign
+    for i_pc in range(Num_PCA_Vectors):
+        for i_reps in range(reps):
+            reference_vector=PC_Vector_Components[i_pc,:,0] #Decides what is parallel and anti parallel (choice is arbritary)
+            vect1=PC_Vector_Components[i_pc,:,i_reps]
+            if pearsonr(reference_vector,vect1)[0]<0: #Not testing for perfectly anti parallel vectors but "close enough"
+                vect1=-1*vect1
+            PC_Vector_Components[i_pc,:,i_reps]=vect1
+    
+    PC_Errors_STD=np.zeros([Num_PCA_Vectors,Num_Variables])
+    for i_variables in range(Num_Variables):
+        for i_pc in range(Num_PCA_Vectors):
+            PC_Errors_STD[i_pc,i_variables]=np.std(PC_Vector_Components[i_pc,i_variables,:])
+
+    return(PC_Errors_STD)
+
+
+
 
 #Dictonaries that will be useful for the next family of functions 
 d= {
@@ -3222,8 +3808,8 @@ d= {
   "OII(2)": 2,
   'H The': 3,
   'H Eta': 4,
-  'Ne III(1)': 5,
-  'Ne III(2)': 6,
+  'NeIII(1)': 5,
+  'NeIII(2)': 6,
   'H Zeta': 7,
   'H Eps': 8,
   'H Del': 9,
@@ -3288,8 +3874,54 @@ d2= {
   19:'NII(2)',
   20:'SII(1)',
   21:'SII(2)',
-  22:'Stellar',
+  22:'Stellar'
 }
+
+d_reduced= {
+  "Ha": 0,
+  "OII(1)": 1,
+  'H The': 2,
+  'H Eta': 3,
+  'Ne III(1)': 4,
+  'H Zeta': 5,
+  'H Eps': 6,
+  'H Del': 7,
+  'H Gam': 8,
+  'Hb': 9,
+  'OIII(1)':10,
+  'SII(1)': 11,
+  'Stellar': 12,
+  0:0,
+  1:1,
+  2:2,
+  3:3,
+  4:4,
+  5:5,
+  6:6,
+  7:7,
+  8:8,
+  9:9,
+  10:10,
+  11:11,
+  12:12,
+}
+
+d2_reduced= {
+  0:'H' r'$\alpha$',
+  1:"OII(1)",
+  2:'H' r'$\theta$',
+  3:'H' r'$\eta$',
+  4:'Ne III(1)',
+  5: 'H' r'$\zeta$',
+  6:'H' r'$\epsilon$',
+  7:'H' r'$\delta$',
+  8:'H' r'$\gamma$',
+  9:'H' r'$\beta$',
+  10:'OIII(1)',
+  11:'SII(1)',
+  12:'Stellar'
+}
+
 
 #Function takes a numpy array corresponding to PC vectors and finds the difference between all variables across all PC Vectors
 def difference_finder(vectors):
@@ -3300,12 +3932,22 @@ def difference_finder(vectors):
                 dif[i_pc,i_variable,i_variables]=vectors[i_pc,i_variable]-vectors[i_pc,i_variables]
     return(dif)
 
+def difference_finder_reduced(vectors):
+    dif=np.zeros([3,13,13])
+    for i_variable in range (13):
+        for i_pc in range (3):
+            for i_variables in range (13):
+                dif[i_pc,i_variable,i_variables]=vectors[i_pc,i_variable]-vectors[i_pc,i_variables]
+    return(dif)
+
 #Takes the output of difference_finder and uses the dictonary to find a specific difference between variables across a given set of PC Vectors
 def difference_lookup(vectors,PC_Vector,variable1,variable2):
     a=difference_finder(vectors)
     return(a[PC_Vector,d[variable1],d[variable2]])
 
-
+def difference_lookup_reduced(vectors,PC_Vector,variable1,variable2):
+    a=difference_finder_reduced(vectors)
+    return(a[PC_Vector,d_reduced[variable1],d_reduced[variable2]])
 
 
 #Importing All MaNGA Data from DPRall Schema
@@ -3682,108 +4324,145 @@ All_SFG_PC_Vectors=np.loadtxt('All_SFG_PC_Vectors')
 
 
 
-#Sample Case 
+
 PC_Vector_Names=np.array([0,1,2])
 
-bin1_QG_dif=difference_lookup(bin1_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin2_QG_dif=difference_lookup(bin2_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin3_QG_dif=difference_lookup(bin3_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin4_QG_dif=difference_lookup(bin4_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin5_QG_dif=difference_lookup(bin5_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-All_QG_dif=difference_lookup(All_QG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+# fig,axs=plt.subplots(23,23,figsize=(40,40))
+# fig.suptitle('Correlation Between Velocities of Galaxy Components \n for Given Galaxy Groups',fontsize=64)
+# for i_variable_row in range(23):
+#     for i_variable_column in range(23):
+#         bin1_QG_dif=difference_lookup(bin1_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin2_QG_dif=difference_lookup(bin2_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin3_QG_dif=difference_lookup(bin3_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin4_QG_dif=difference_lookup(bin4_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin5_QG_dif=difference_lookup(bin5_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         All_QG_dif=difference_lookup(All_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
 
 
-bin1_SFG_dif=difference_lookup(bin1_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin2_SFG_dif=difference_lookup(bin2_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin3_SFG_dif=difference_lookup(bin3_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin4_SFG_dif=difference_lookup(bin4_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-All_SFG_dif=difference_lookup(All_SFG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+#         bin1_SFG_dif=difference_lookup(bin1_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin2_SFG_dif=difference_lookup(bin2_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin3_SFG_dif=difference_lookup(bin3_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin4_SFG_dif=difference_lookup(bin4_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         All_SFG_dif=difference_lookup(All_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
 
-bin2_GVG_dif=difference_lookup(bin2_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin3_GVG_dif=difference_lookup(bin3_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-bin4_GVG_dif=difference_lookup(bin4_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
-All_GVG_dif=difference_lookup(All_GVG_PC_Vectors,[0,1,2],'Ha', 'OI(1)')
+#         bin2_GVG_dif=difference_lookup(bin2_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin3_GVG_dif=difference_lookup(bin3_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         bin4_GVG_dif=difference_lookup(bin4_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
+#         All_GVG_dif=difference_lookup(All_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
 
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_QG_dif,label='Bin 1 QG', color='maroon')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_QG_dif,label='Bin 2 QG', color='saddlebrown')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_QG_dif,label='Bin 3 QG', color='darkorange')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_QG_dif,label='Bin 4 QG', color='pink')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin5_QG_dif,label='Bin 5 QG', color='gold')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_QG_dif,label='All QG',color='red')
 
-# plt.title('Ha and OII Difference in Correlation')
-# plt.scatter(PC_Vector_Names,bin1_QG_dif,label='Bin 1 QG')
-# plt.scatter(PC_Vector_Names,bin2_QG_dif,label='Bin 2 QG')
-# plt.scatter(PC_Vector_Names,bin3_QG_dif,label='Bin 3 QG')
-# plt.scatter(PC_Vector_Names,bin4_QG_dif,label='Bin 4 QG')
-# plt.scatter(PC_Vector_Names,bin5_QG_dif,label='Bin 5 QG')
-# plt.scatter(PC_Vector_Names,All_QG_dif,label='All QG')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_SFG_dif,label='Bin 1 SFG',color='violet')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_SFG_dif,label='Bin 2 SFG',color='steelblue')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_SFG_dif,label='Bin 3 SFG',color='navy')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_SFG_dif,label='Bin 4 SFG',color='aquamarine')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_SFG_dif,label='All SFG',color='blue')
 
-# plt.scatter(PC_Vector_Names,bin1_SFG_dif,label='Bin 1 SFG')
-# plt.scatter(PC_Vector_Names,bin2_SFG_dif,label='Bin 2 SFG')
-# plt.scatter(PC_Vector_Names,bin3_SFG_dif,label='Bin 3 SFG')
-# plt.scatter(PC_Vector_Names,bin4_SFG_dif,label='Bin 4 SFG')
-# plt.scatter(PC_Vector_Names,All_SFG_dif,label='All SFG')
-
-# plt.scatter(PC_Vector_Names,bin2_GVG_dif,label='Bin 2 GVG')
-# plt.scatter(PC_Vector_Names,bin3_GVG_dif,label='Bin 3 GVG')
-# plt.scatter(PC_Vector_Names,bin4_GVG_dif,label='Bin 4 GVG')
-# plt.scatter(PC_Vector_Names,All_GVG_dif,label='All GVG')
-
-# plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
-# plt.ylabel('Difference in Correlation')
-# plt.show()
-# plt.figure()
-
-
-#Generalization of above 
-fig,axs=plt.subplots(23,23,figsize=(40,40))
-fig.suptitle('Correlation Between Variables \n for Given Galaxy Groups',fontsize=64)
-for i_variable_row in range(23):
-    for i_variable_column in range(23):
-        bin1_QG_dif=difference_lookup(bin1_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin2_QG_dif=difference_lookup(bin2_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin3_QG_dif=difference_lookup(bin3_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin4_QG_dif=difference_lookup(bin4_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin5_QG_dif=difference_lookup(bin5_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        All_QG_dif=difference_lookup(All_QG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-
-
-        bin1_SFG_dif=difference_lookup(bin1_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin2_SFG_dif=difference_lookup(bin2_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin3_SFG_dif=difference_lookup(bin3_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin4_SFG_dif=difference_lookup(bin4_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        All_SFG_dif=difference_lookup(All_SFG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-
-        bin2_GVG_dif=difference_lookup(bin2_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin3_GVG_dif=difference_lookup(bin3_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        bin4_GVG_dif=difference_lookup(bin4_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-        All_GVG_dif=difference_lookup(All_GVG_PC_Vectors,[0,1,2],i_variable_row, i_variable_column)
-
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_QG_dif,label='Bin 1 QG', color='maroon')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_QG_dif,label='Bin 2 QG', color='saddlebrown')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_QG_dif,label='Bin 3 QG', color='darkorange')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_QG_dif,label='Bin 4 QG', color='pink')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin5_QG_dif,label='Bin 5 QG', color='gold')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_QG_dif,label='All QG',color='red')
-
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_SFG_dif,label='Bin 1 SFG',color='violet')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_SFG_dif,label='Bin 2 SFG',color='steelblue')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_SFG_dif,label='Bin 3 SFG',color='navy')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_SFG_dif,label='Bin 4 SFG',color='aquamarine')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_SFG_dif,label='All SFG',color='blue')
-
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_GVG_dif,label='Bin 2 GVG',color='darkolivegreen')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_GVG_dif,label='Bin 3 GVG',color='lawngreen')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_GVG_dif,label='Bin 4 GVG',color='springgreen')
-        axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_GVG_dif,label='All GVG', color='green')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_GVG_dif,label='Bin 2 GVG',color='darkolivegreen')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_GVG_dif,label='Bin 3 GVG',color='lawngreen')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_GVG_dif,label='Bin 4 GVG',color='springgreen')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_GVG_dif,label='All GVG', color='green')
 
         
-        axs[i_variable_row,i_variable_column].set_xlim((-0.5,2.5))
-        axs[i_variable_row,i_variable_column].set_ylim((-1,1))
-        if i_variable_row== 22:
-            axs[i_variable_row,i_variable_column].set_xlabel(str(d2[i_variable_column]), fontsize=24)
-        if i_variable_column==0:
-            axs[i_variable_row,i_variable_column].set_ylabel(str(d2[i_variable_row]), fontsize=24)
-        if i_variable_row != 22:
-            axs[i_variable_row,i_variable_column].set_xticklabels('')
-        if i_variable_column !=0:
-            axs[i_variable_row,i_variable_column].set_yticklabels('')
+#         axs[i_variable_row,i_variable_column].set_xlim((-0.5,2.5))
+#         axs[i_variable_row,i_variable_column].set_ylim((-1,1))
+#         if i_variable_row== 22:
+#             axs[i_variable_row,i_variable_column].set_xlabel(str(d2[i_variable_column]), fontsize=24)
+#         if i_variable_column==0:
+#             axs[i_variable_row,i_variable_column].set_ylabel(str(d2[i_variable_row]), fontsize=24)
+#         if i_variable_row != 22:
+#             axs[i_variable_row,i_variable_column].set_xticklabels('')
+#         if i_variable_column !=0:
+#             axs[i_variable_row,i_variable_column].set_yticklabels('')
 
-plt.legend(bbox_to_anchor=(1, 15), loc='center left', fontsize=30)
-plt.savefig('MatrixPlots.pdf')
+# plt.legend(bbox_to_anchor=(1, 15), loc='center left', fontsize=30)
+# plt.savefig('MatrixPlots.pdf')
+    
+
+#Removing Redundant Relationships 
+
+#use np.delete(pc_matrix, column number, axis=1) where axis 1 is columns 
+# redundant=np.array([d['He I'],d['OI(1)'],d['OI(2)'], d['NII(1)'], d['NII(2)'], d['NeIII(2)'], d['OII(2)'], d['SII(2)'], d['OIII(2)'], d['He II']])
+
+# bin1_QG_PC_Vectors_reduced=np.delete(bin1_QG_PC_Vectors,redundant, axis=1)
+# bin2_QG_PC_Vectors_reduced=np.delete(bin2_QG_PC_Vectors,redundant, axis=1)
+# bin3_QG_PC_Vectors_reduced=np.delete(bin3_QG_PC_Vectors,redundant, axis=1)
+# bin4_QG_PC_Vectors_reduced=np.delete(bin4_QG_PC_Vectors,redundant, axis=1)
+# bin5_QG_PC_Vectors_reduced=np.delete(bin5_QG_PC_Vectors,redundant, axis=1)
+# All_QG_PC_Vectors_reduced=np.delete(All_QG_PC_Vectors,redundant, axis=1)
+
+# bin1_SFG_PC_Vectors_reduced=np.delete(bin1_SFG_PC_Vectors,redundant, axis=1)
+# bin2_SFG_PC_Vectors_reduced=np.delete(bin2_SFG_PC_Vectors,redundant, axis=1)
+# bin3_SFG_PC_Vectors_reduced=np.delete(bin3_SFG_PC_Vectors,redundant, axis=1)
+# bin4_SFG_PC_Vectors_reduced=np.delete(bin4_SFG_PC_Vectors,redundant, axis=1)
+# All_SFG_PC_Vectors_reduced=np.delete(All_SFG_PC_Vectors,redundant, axis=1)
+
+
+# bin2_GVG_PC_Vectors_reduced=np.delete(bin2_GVG_PC_Vectors,redundant, axis=1)
+# bin3_GVG_PC_Vectors_reduced=np.delete(bin3_GVG_PC_Vectors,redundant, axis=1)
+# bin4_GVG_PC_Vectors_reduced=np.delete(bin4_GVG_PC_Vectors,redundant, axis=1)
+# All_GVG_PC_Vectors_reduced=np.delete(All_GVG_PC_Vectors,redundant, axis=1)
+
+# fig,axs=plt.subplots(13,13,figsize=(40,40))
+# fig.suptitle('Correlation Between Velocities of Galaxy Components \n for Given Galaxy Groups (Reduced)',fontsize=64)
+# for i_variable_row in range(13):
+#     for i_variable_column in range(13):
+#         bin1_QG_dif_reduced=difference_lookup_reduced(bin1_QG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin2_QG_dif_reduced=difference_lookup_reduced(bin2_QG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin3_QG_dif_reduced=difference_lookup_reduced(bin3_QG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin4_QG_dif_reduced=difference_lookup_reduced(bin4_QG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin5_QG_dif_reduced=difference_lookup_reduced(bin5_QG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         All_QG_dif_reduced=difference_lookup_reduced(All_QG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+
+
+#         bin1_SFG_dif_reduced=difference_lookup_reduced(bin1_SFG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin2_SFG_dif_reduced=difference_lookup_reduced(bin2_SFG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin3_SFG_dif_reduced=difference_lookup_reduced(bin3_SFG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin4_SFG_dif_reduced=difference_lookup_reduced(bin4_SFG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         All_SFG_dif_reduced=difference_lookup_reduced(All_SFG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+
+#         bin2_GVG_dif_reduced=difference_lookup_reduced(bin2_GVG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin3_GVG_dif_reduced=difference_lookup_reduced(bin3_GVG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         bin4_GVG_dif_reduced=difference_lookup_reduced(bin4_GVG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+#         All_GVG_dif_reduced=difference_lookup_reduced(All_GVG_PC_Vectors_reduced,[0,1,2],i_variable_row, i_variable_column)
+
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_QG_dif_reduced,label='Bin 1 QG', color='maroon')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_QG_dif_reduced,label='Bin 2 QG', color='saddlebrown')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_QG_dif_reduced,label='Bin 3 QG', color='darkorange')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_QG_dif_reduced,label='Bin 4 QG', color='pink')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin5_QG_dif_reduced,label='Bin 5 QG', color='gold')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_QG_dif_reduced,label='All QG',color='red')
+
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin1_SFG_dif_reduced,label='Bin 1 SFG',color='violet')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_SFG_dif_reduced,label='Bin 2 SFG',color='steelblue')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_SFG_dif_reduced,label='Bin 3 SFG',color='navy')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_SFG_dif_reduced,label='Bin 4 SFG',color='aquamarine')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_SFG_dif_reduced,label='All SFG',color='blue')
+
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin2_GVG_dif_reduced,label='Bin 2 GVG',color='darkolivegreen')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin3_GVG_dif_reduced,label='Bin 3 GVG',color='lawngreen')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,bin4_GVG_dif_reduced,label='Bin 4 GVG',color='springgreen')
+#         axs[i_variable_row,i_variable_column].plot(PC_Vector_Names,All_GVG_dif_reduced,label='All GVG', color='green')
+
+        
+#         axs[i_variable_row,i_variable_column].set_xlim((-0.5,2.5))
+#         axs[i_variable_row,i_variable_column].set_ylim((-1,1))
+#         if i_variable_row== 12:
+#             axs[i_variable_row,i_variable_column].set_xlabel(str(d2_reduced[i_variable_column]), fontsize=24)
+#         if i_variable_column==0:
+#             axs[i_variable_row,i_variable_column].set_ylabel(str(d2_reduced[i_variable_row]), fontsize=24)
+#         if i_variable_row != 12:
+#             axs[i_variable_row,i_variable_column].set_xticklabels('')
+#         if i_variable_column !=0:
+#             axs[i_variable_row,i_variable_column].set_yticklabels('')
+
+# plt.legend(bbox_to_anchor=(1, 7), loc='center left', fontsize=30)
+# plt.savefig('MatrixPlotsReduced.pdf')
+    
+d=bootstrap_combined_vel(bin5_QG.loc[:,'plateifu'],3,23,10)
     

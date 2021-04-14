@@ -1,13 +1,4 @@
 To do:
-
-Take Generated kinematic profile plots and find difference across variables across all 3 PCA's per plot. Overplot this for every galaxy type/bins
-and oberseve any trends that emerge
--Make function that saves PCA result arrays so we can find differences in variables 
--This will look like a giant matrix in which every element will be a plot of a specific variable difference across galaxy types/bins
--Each array element will have 3 points per profile plot it pulls from (one point per PCA vector)
--Diagonals will be empty/null plots as trivially any variable minus itself will always be 0
-
-
-Need to make:
-Look for PCA vectors in the galaxy picture space by multiplying pixel value by PC vector component along that direction 
--Working on why Image calls from Marvin API are not working 
+ -List all variables Angstrom breaks explicitly? (for things like OII(1) and OII(2)) 
+ -Citing numpy, matplot lib etc? 
+ 
